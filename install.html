@@ -57,6 +57,41 @@
       padding-bottom: 120px;
     }
 
+    /* ── LANGUAGE TOGGLE ── */
+
+    .lang-toggle {
+      display: flex;
+      border: 1px solid var(--border-visible);
+      border-radius: 999px;
+      overflow: hidden;
+      width: fit-content;
+    }
+
+    .lang-btn {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 8px 20px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: background 200ms ease-out, color 200ms ease-out;
+    }
+
+    .lang-btn.active {
+      background: var(--text-display);
+      color: var(--black);
+    }
+
+    /* ── LANGUAGE VISIBILITY ── */
+
+    [data-lang="ja"] .lang-en,
+    [data-lang="en"] .lang-ja {
+      display: none;
+    }
+
     /* ── HERO ── */
 
     .hero {
@@ -333,11 +368,19 @@
     }
 
     .example::before {
-      content: '"';
+      content: '\201C';
     }
 
     .example::after {
-      content: '"';
+      content: '\201D';
+    }
+
+    [data-lang="ja"] .example::before {
+      content: '\300C';
+    }
+
+    [data-lang="ja"] .example::after {
+      content: '\300D';
     }
 
     /* ── DIVIDER ── */
@@ -429,14 +472,26 @@
     }
   </style>
 </head>
-<body>
+<body data-lang="en">
   <div class="page">
+
+    <!-- LANGUAGE TOGGLE -->
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" onclick="setLang('ja')">JA</button>
+    </div>
 
     <!-- HERO -->
     <header class="hero">
-      <div class="hero-label">Setup Guide</div>
+      <div class="hero-label">
+        <span class="lang-en">Setup Guide</span>
+        <span class="lang-ja">セットアップガイド</span>
+      </div>
       <h1 class="hero-title">Connect Poke<br>to VoiceOS</h1>
-      <p class="hero-subtitle">Control Poke by voice on your Mac. Four steps, five minutes.</p>
+      <p class="hero-subtitle">
+        <span class="lang-en">Control Poke by voice on your Mac. Four steps, five minutes.</span>
+        <span class="lang-ja">Macで声を使ってPokeを操作しよう。4つのステップ、5分で完了。</span>
+      </p>
     </header>
 
     <!-- PROGRESS -->
@@ -453,18 +508,35 @@
       <!-- STEP 1 -->
       <section class="step">
         <div class="step-number">Step 01</div>
-        <h2 class="step-title">Get your Poke API key</h2>
+        <h2 class="step-title">
+          <span class="lang-en">Get your Poke API key</span>
+          <span class="lang-ja">PokeのAPIキーを取得する</span>
+        </h2>
         <div class="step-body">
-          <ol class="step-list">
+          <!-- EN -->
+          <ol class="step-list lang-en">
             <li>Open <a href="https://poke.com/kitchen">poke.com/kitchen</a> in your browser</li>
             <li>Go to <strong>API Keys</strong></li>
             <li>Create a new <strong>V2</strong> key</li>
             <li>Copy the key &mdash; you'll need it in Step 3</li>
           </ol>
+          <!-- JA -->
+          <ol class="step-list lang-ja">
+            <li>ブラウザで <a href="https://poke.com/kitchen">poke.com/kitchen</a> を開く</li>
+            <li><strong>API Keys</strong> をクリック</li>
+            <li>新しい <strong>V2</strong> キーを作る</li>
+            <li>キーをコピーする &mdash; ステップ3で使います</li>
+          </ol>
 
           <div class="callout">
-            <div class="callout-label">Important</div>
-            <p>You need a V2 key, not a V1 key. V1 keys start with <code class="inline">pk_</code> and won't work.</p>
+            <div class="callout-label">
+              <span class="lang-en">Important</span>
+              <span class="lang-ja">注意</span>
+            </div>
+            <p>
+              <span class="lang-en">You need a V2 key, not a V1 key. V1 keys start with <code class="inline">pk_</code> and won't work.</span>
+              <span class="lang-ja">V1キーではなくV2キーが必要です。V1キーは <code class="inline">pk_</code> で始まりますが、使えません。</span>
+            </p>
           </div>
         </div>
       </section>
@@ -472,9 +544,15 @@
       <!-- STEP 2 -->
       <section class="step">
         <div class="step-number">Step 02</div>
-        <h2 class="step-title">Download poke-bridge</h2>
+        <h2 class="step-title">
+          <span class="lang-en">Download poke-bridge</span>
+          <span class="lang-ja">poke-bridgeをダウンロードする</span>
+        </h2>
         <div class="step-body">
-          <p>Open <strong>Terminal</strong> on your Mac and paste this command. It will create a new folder and set everything up for you.</p>
+          <p>
+            <span class="lang-en">Open <strong>Terminal</strong> on your Mac and paste this command. It will create a new folder and set everything up for you.</span>
+            <span class="lang-ja">Macで<strong>ターミナル</strong>を開いて、このコマンドを貼り付けてください。フォルダが自動で作られて、準備が完了します。</span>
+          </p>
 
           <div class="code-wrapper">
             <div class="code-block">
@@ -485,7 +563,10 @@
 
           <div class="tip">
             <div class="tip-label">Tip</div>
-            <p>You can open Terminal from Spotlight &mdash; press <code class="inline">Cmd + Space</code> and type "Terminal".</p>
+            <p>
+              <span class="lang-en">You can open Terminal from Spotlight &mdash; press <code class="inline">Cmd + Space</code> and type "Terminal".</span>
+              <span class="lang-ja">ターミナルはSpotlightから開けます &mdash; <code class="inline">Cmd + Space</code> を押して「Terminal」と入力してください。</span>
+            </p>
           </div>
         </div>
       </section>
@@ -493,9 +574,15 @@
       <!-- STEP 3 -->
       <section class="step">
         <div class="step-number">Step 03</div>
-        <h2 class="step-title">Add your API key</h2>
+        <h2 class="step-title">
+          <span class="lang-en">Add your API key</span>
+          <span class="lang-ja">APIキーを設定する</span>
+        </h2>
         <div class="step-body">
-          <p>Still in Terminal, run:</p>
+          <p>
+            <span class="lang-en">Still in Terminal, run:</span>
+            <span class="lang-ja">ターミナルで続けて、これを実行してください：</span>
+          </p>
 
           <div class="code-wrapper">
             <div class="code-block">
@@ -504,27 +591,42 @@
             <button class="copy-btn" onclick="copyCode(this, 'cp start.sh.example start.sh\nchmod +x start.sh')">Copy</button>
           </div>
 
-          <p>Now open <code class="inline">start.sh</code> in any text editor and replace <code class="inline">your_v2_key_here</code> with the API key you copied in Step 1.</p>
+          <p>
+            <span class="lang-en">Now open <code class="inline">start.sh</code> in any text editor and replace <code class="inline">your_v2_key_here</code> with the API key you copied in Step 1.</span>
+            <span class="lang-ja"><code class="inline">start.sh</code> をテキストエディタで開いて、<code class="inline">your_v2_key_here</code> をステップ1でコピーしたAPIキーに置き換えてください。</span>
+          </p>
 
           <div class="code-wrapper">
             <div class="code-block">
-              <code><span class="comment"># start.sh should look like this:</span><br><br>export POKE_API_KEY="<span class="highlight">paste_your_key_here</span>"<br>export POKE_SOURCE="VoiceOS"</code>
+              <code><span class="comment lang-en"># start.sh should look like this:</span><span class="comment lang-ja"># start.sh はこんな感じになります：</span><br><br>export POKE_API_KEY="<span class="highlight">paste_your_key_here</span>"<br>export POKE_SOURCE="VoiceOS"</code>
             </div>
           </div>
 
-          <p>Save and close the file.</p>
+          <p>
+            <span class="lang-en">Save and close the file.</span>
+            <span class="lang-ja">ファイルを保存して閉じてください。</span>
+          </p>
         </div>
       </section>
 
       <!-- STEP 4 -->
       <section class="step">
         <div class="step-number">Step 04</div>
-        <h2 class="step-title">Add to VoiceOS</h2>
+        <h2 class="step-title">
+          <span class="lang-en">Add to VoiceOS</span>
+          <span class="lang-ja">VoiceOSに追加する</span>
+        </h2>
         <div class="step-body">
-          <p>Open <strong>VoiceOS</strong> and navigate to:</p>
+          <p>
+            <span class="lang-en">Open <strong>VoiceOS</strong> and navigate to:</span>
+            <span class="lang-ja"><strong>VoiceOS</strong> を開いて、ここに進んでください：</span>
+          </p>
           <p><code class="inline">Settings</code> &rarr; <code class="inline">Integrations</code> &rarr; <code class="inline">Custom Integrations</code> &rarr; <code class="inline">Add</code></p>
 
-          <p>Fill in the fields:</p>
+          <p>
+            <span class="lang-en">Fill in the fields:</span>
+            <span class="lang-ja">以下の内容を入力してください：</span>
+          </p>
 
           <div class="field-table">
             <div class="field-row">
@@ -538,8 +640,14 @@
           </div>
 
           <div class="tip">
-            <div class="tip-label">Finding the path</div>
-            <p>In Terminal, type <code class="inline">cd poke-bridge && pwd</code> to see the full path. Add <code class="inline">/start.sh</code> to the end.</p>
+            <div class="tip-label">
+              <span class="lang-en">Finding the path</span>
+              <span class="lang-ja">パスの確認方法</span>
+            </div>
+            <p>
+              <span class="lang-en">In Terminal, type <code class="inline">cd poke-bridge && pwd</code> to see the full path. Add <code class="inline">/start.sh</code> to the end.</span>
+              <span class="lang-ja">ターミナルで <code class="inline">cd poke-bridge && pwd</code> と入力すると、パスが表示されます。その後ろに <code class="inline">/start.sh</code> を付けてください。</span>
+            </p>
           </div>
         </div>
       </section>
@@ -550,19 +658,39 @@
 
     <!-- DONE -->
     <section>
-      <div class="step-number">You're set</div>
-      <h2 class="step-title">Start talking</h2>
+      <div class="step-number">
+        <span class="lang-en">You're set</span>
+        <span class="lang-ja">準備完了</span>
+      </div>
+      <h2 class="step-title">
+        <span class="lang-en">Start talking</span>
+        <span class="lang-ja">話しかけてみよう</span>
+      </h2>
       <div class="step-body">
-        <p>Speak to VoiceOS naturally. Mention Poke and it will route your request.</p>
+        <p>
+          <span class="lang-en">Speak to VoiceOS naturally. Mention Poke and it will route your request.</span>
+          <span class="lang-ja">VoiceOSに自然に話しかけてください。Pokeの名前を言えば、リクエストが届きます。</span>
+        </p>
 
-        <div class="examples">
+        <!-- EN examples -->
+        <div class="examples lang-en">
           <div class="example">Ask Poke to remind me to call the client tomorrow at 9am</div>
           <div class="example">Tell Poke to draft an email to the team about Friday's deadline</div>
           <div class="example">Have Poke add a standup to my calendar Monday at 10am</div>
           <div class="example">Ask Poke what's on my calendar today</div>
         </div>
+        <!-- JA examples -->
+        <div class="examples lang-ja">
+          <div class="example">Pokeに明日の朝9時にクライアントに電話するリマインダーをお願いして</div>
+          <div class="example">Pokeに金曜の締め切りについてチームにメールを書いてもらって</div>
+          <div class="example">Pokeに月曜の朝10時にスタンドアップをカレンダーに追加して</div>
+          <div class="example">Pokeに今日のカレンダーを聞いて</div>
+        </div>
 
-        <p>Poke will reply in iMessage with the result.</p>
+        <p>
+          <span class="lang-en">Poke will reply in iMessage with the result.</span>
+          <span class="lang-ja">Pokeの返事はiMessageに届きます。</span>
+        </p>
       </div>
     </section>
 
@@ -574,6 +702,14 @@
   </div>
 
   <script>
+    function setLang(lang) {
+      document.body.setAttribute('data-lang', lang);
+      document.documentElement.lang = lang;
+      document.querySelectorAll('.lang-btn').forEach(function(btn) {
+        btn.classList.toggle('active', btn.textContent.trim() === lang.toUpperCase());
+      });
+    }
+
     function copyCode(btn, text) {
       navigator.clipboard.writeText(text).then(function() {
         btn.textContent = 'Copied';
@@ -583,6 +719,11 @@
           btn.classList.remove('copied');
         }, 2000);
       });
+    }
+
+    // Default to device language
+    if (navigator.language.startsWith('ja')) {
+      setLang('ja');
     }
   </script>
 </body>
