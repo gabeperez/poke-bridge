@@ -5,6 +5,7 @@ import { z } from "zod";
 
 const POKE_API_URL = "https://poke.com/api/v1/inbound/api-message";
 const API_KEY = process.env.POKE_API_KEY;
+const SOURCE = process.env.POKE_SOURCE || "poke-bridge";
 
 function logError(message: string, error?: unknown) {
   const detail = error instanceof Error ? error.stack || error.message : error ? String(error) : "";
@@ -17,8 +18,8 @@ async function sendToPoke(message: string): Promise<{ ok: boolean; text: string 
   }
 
   const payload = {
-    message: `[VoiceOS] ${message}`,
-    source: "VoiceOS",
+    message: `[${SOURCE}] ${message}`,
+    source: SOURCE,
   };
 
   try {

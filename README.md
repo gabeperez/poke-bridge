@@ -39,6 +39,15 @@ Your client (VoiceOS / Claude / terminal / cron)
 
 ---
 
+## Configuration
+
+| Variable | Required | Default | Description |
+|---|---|---|---|
+| `POKE_API_KEY` | Yes | — | Your Poke V2 API key from [Kitchen](https://poke.com/kitchen) |
+| `POKE_SOURCE` | No | `poke-bridge` | Label prefixed to messages so Poke knows where they came from (e.g. `VoiceOS`, `Claude Desktop`, `Cursor`) |
+
+---
+
 ## Requirements
 
 - [Poke](https://poke.com) account with a **V2 API key** from [Kitchen](https://poke.com/kitchen) → API Keys
@@ -67,6 +76,7 @@ Edit `start.sh` and replace `your_v2_key_here` with your Poke V2 API key:
 
 ```bash
 export POKE_API_KEY="your_v2_key_here"
+export POKE_SOURCE="VoiceOS"  # optional — defaults to "poke-bridge"
 ```
 
 > ⚠️ `start.sh` is gitignored. Your key will never be committed.
@@ -108,7 +118,8 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
       "command": "/absolute/path/to/poke-bridge/node_modules/.bin/tsx",
       "args": ["/absolute/path/to/poke-bridge/poke-bridge.ts"],
       "env": {
-        "POKE_API_KEY": "your_v2_key_here"
+        "POKE_API_KEY": "your_v2_key_here",
+        "POKE_SOURCE": "Claude Desktop"
       }
     }
   }
@@ -133,7 +144,8 @@ Add the same block to your editor's MCP config (usually `.cursor/mcp.json` or eq
       "command": "/absolute/path/to/poke-bridge/node_modules/.bin/tsx",
       "args": ["/absolute/path/to/poke-bridge/poke-bridge.ts"],
       "env": {
-        "POKE_API_KEY": "your_v2_key_here"
+        "POKE_API_KEY": "your_v2_key_here",
+        "POKE_SOURCE": "Cursor"
       }
     }
   }
@@ -200,7 +212,7 @@ Pair it with a Siri phrase for fully voice-triggered Poke on iPhone or Apple Wat
 
 ## How Messages Appear
 
-Poke receives messages via API as a webhook — they don't show on your side of the iMessage thread, but Poke acts on them and replies normally in iMessage. Every message sent through this bridge is prefixed with `[VoiceOS]` so Poke has context about where it came from.
+Poke receives messages via API as a webhook — they don't show on your side of the iMessage thread, but Poke acts on them and replies normally in iMessage. Every message sent through this bridge is prefixed with `[poke-bridge]` (or your custom `POKE_SOURCE`) so Poke has context about where it came from.
 
 ---
 
@@ -228,7 +240,7 @@ POST https://poke.com/api/v1/inbound/api-message
 Authorization: Bearer YOUR_V2_KEY
 Content-Type: application/json
 
-{"message": "your instruction here", "source": "VoiceOS"}
+{"message": "[poke-bridge] your instruction here", "source": "poke-bridge"}
 ```
 
 > ⚠️ The legacy `/api/v1/inbound-sms/webhook` endpoint and `pk_`-prefixed V1 keys are **not** supported. Create a V2 key in [Kitchen](https://poke.com/kitchen).
