@@ -126,13 +126,19 @@ Same MCP config as Claude Desktop. Add to your editor's MCP settings and delegat
 
 ### From the terminal (no MCP needed)
 
-The Poke API is just a single HTTP call:
+The Poke API is a single POST call. Test it with curl:
 
 ```bash
-curl 'https://poke.com/api/v1/inbound/api-message' \
+curl -X POST https://poke.com/api/v1/inbound/api-message \
   -H "Authorization: Bearer YOUR_KEY" \
   -H "Content-Type: application/json" \
-  -d '{"message": "Remind me to submit the report by 5pm today"}'
+  -d '{"message": "will it rain today?"}'
+```
+
+Expected response:
+
+```json
+{"success": true, "message": "Message sent successfully"}
 ```
 
 ---
@@ -143,7 +149,7 @@ curl 'https://poke.com/api/v1/inbound/api-message' \
 #!/bin/bash
 # Notify Poke when a long job finishes
 run_my_long_job.sh && \
-  curl -s 'https://poke.com/api/v1/inbound/api-message' \
+  curl -X POST https://poke.com/api/v1/inbound/api-message \
     -H "Authorization: Bearer $POKE_API_KEY" \
     -H "Content-Type: application/json" \
     -d '{"message": "The build finished successfully. Add a done note to my todo list."}'
@@ -153,19 +159,19 @@ run_my_long_job.sh && \
 
 ### From macOS Shortcuts
 
-Use a **Get Contents of URL** action with:
-- URL: `https://poke.com/api/v1/inbound/api-message`
-- Method: POST
-- Headers: `Authorization: Bearer YOUR_KEY`, `Content-Type: application/json`
-- Body: `{"message": "your instruction here"}`
+Use a **Get Contents of URL** action:
+- **URL:** `https://poke.com/api/v1/inbound/api-message`
+- **Method:** POST
+- **Headers:** `Authorization: Bearer YOUR_KEY`, `Content-Type: application/json`
+- **Body (JSON):** `{"message": "your instruction here"}`
 
-Pair it with a Siri shortcut for a fully voice-triggered Poke on iPhone/Apple Watch.
+Pair it with a Siri phrase for fully voice-triggered Poke on iPhone or Apple Watch.
 
 ---
 
 ## How Messages Appear
 
-Poke receives messages via API as a webhook — they don't show on your side of the iMessage thread, but Poke acts on them and replies normally in iMessage. Every message sent through this bridge is prefixed with `[VoiceOS]` (or whatever source label you configure) so Poke has context about where it came from.
+Poke receives messages via API as a webhook — they don't show on your side of the iMessage thread, but Poke acts on them and replies normally in iMessage. Every message sent through this bridge is prefixed with `[VoiceOS]` so Poke has context about where it came from.
 
 ---
 
@@ -193,7 +199,7 @@ POST https://poke.com/api/v1/inbound/api-message
 Authorization: Bearer YOUR_V2_KEY
 Content-Type: application/json
 
-{ "message": "[VoiceOS] your instruction here", "source": "VoiceOS" }
+{"message": "your instruction here", "source": "VoiceOS"}
 ```
 
 > ⚠️ The legacy `/api/v1/inbound-sms/webhook` endpoint and `pk_`-prefixed V1 keys are **not** supported. Create a V2 key in [Kitchen](https://poke.com/kitchen).
