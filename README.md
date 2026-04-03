@@ -93,7 +93,7 @@ Then speak naturally:
 - *"Have Poke add a standup to my calendar Monday at 10am"*
 - *"Ask Poke what's on my calendar today"*
 
-> **Note on the launch command:** VoiceOS throws `ENAMETOOLONG` if you pass inline env vars (`KEY=value command`). The wrapper script sidesteps this.
+> **Note:** VoiceOS throws `ENAMETOOLONG` if you pass inline env vars (`KEY=value command`). The `start.sh` wrapper exports your key cleanly before launching the server.
 
 ---
 
@@ -105,13 +105,17 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
 {
   "mcpServers": {
     "poke": {
-      "command": "/absolute/path/to/poke-bridge/start.sh"
+      "command": "/absolute/path/to/poke-bridge/node_modules/.bin/tsx",
+      "args": ["/absolute/path/to/poke-bridge/poke-bridge.ts"],
+      "env": {
+        "POKE_API_KEY": "your_v2_key_here"
+      }
     }
   }
 }
 ```
 
-Then in any Claude conversation:
+Restart Claude Desktop after saving. Then in any conversation:
 
 - *"Tell Poke to remind me about the investor call at 3pm"*
 - *"Ask Poke to draft a follow-up email to the NSN team"*
@@ -120,13 +124,27 @@ Then in any Claude conversation:
 
 ### With Cursor / Windsurf
 
-Same MCP config as Claude Desktop. Add to your editor's MCP settings and delegate tasks to Poke while you code.
+Add the same block to your editor's MCP config (usually `.cursor/mcp.json` or equivalent):
+
+```json
+{
+  "mcpServers": {
+    "poke": {
+      "command": "/absolute/path/to/poke-bridge/node_modules/.bin/tsx",
+      "args": ["/absolute/path/to/poke-bridge/poke-bridge.ts"],
+      "env": {
+        "POKE_API_KEY": "your_v2_key_here"
+      }
+    }
+  }
+}
+```
 
 ---
 
 ### From the terminal (no MCP needed)
 
-The Poke API is a single POST call. Test it with curl:
+The Poke API is a single POST call:
 
 ```bash
 curl -X POST https://poke.com/api/v1/inbound/api-message \
@@ -147,12 +165,22 @@ Expected response:
 
 ```bash
 #!/bin/bash
-# Notify Poke when a long job finishes
+export POKE_API_KEY="your_v2_key_here"
+
+curl -s -X POST https://poke.com/api/v1/inbound/api-message \
+  -H "Authorization: Bearer $POKE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"message": "The build finished. Please add a note to my todo list."}'
+```
+
+Or trigger from any script after a long job:
+
+```bash
 run_my_long_job.sh && \
-  curl -X POST https://poke.com/api/v1/inbound/api-message \
+  curl -s -X POST https://poke.com/api/v1/inbound/api-message \
     -H "Authorization: Bearer $POKE_API_KEY" \
     -H "Content-Type: application/json" \
-    -d '{"message": "The build finished successfully. Add a done note to my todo list."}'
+    -d '{"message": "Job done. Send me a summary of what ran today."}'
 ```
 
 ---
@@ -160,10 +188,11 @@ run_my_long_job.sh && \
 ### From macOS Shortcuts
 
 Use a **Get Contents of URL** action:
+
 - **URL:** `https://poke.com/api/v1/inbound/api-message`
 - **Method:** POST
 - **Headers:** `Authorization: Bearer YOUR_KEY`, `Content-Type: application/json`
-- **Body (JSON):** `{"message": "your instruction here"}`
+- **Request Body:** JSON — `{"message": "your instruction here", "source": "Shortcuts"}`
 
 Pair it with a Siri phrase for fully voice-triggered Poke on iPhone or Apple Watch.
 
