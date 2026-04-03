@@ -1,0 +1,9 @@
+#!/bin/bash
+# Copy this file to start.sh and fill in your Poke V2 API key.
+# Get your key at https://poke.com/kitchen → API Keys
+#
+# start.sh is gitignored — your key will never be committed.
+
+export POKE_API_KEY="your_v2_key_here"
+
+exec "$(dirname "$0")/node_modules/.bin/tsx" "$(dirname "$0")/poke-bridge.ts"
