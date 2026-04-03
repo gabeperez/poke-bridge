@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1200">
+<title>poke-bridge OG Image</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Doto:wght@400;700&family=Space+Grotesk:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 1200px;
+    height: 630px;
+    background: #000000;
+    overflow: hidden;
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    position: relative;
+  }
+
+  /* Subtle dot grid background */
+  .dot-grid {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, #222222 0.8px, transparent 0.8px);
+    background-size: 16px 16px;
+    opacity: 0.4;
+  }
+
+  .content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 64px 80px;
+  }
+
+  /* Tertiary: MCP label */
+  .label {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #666666;
+    margin-bottom: 24px;
+  }
+
+  /* Primary: Hero title */
+  .title {
+    font-family: 'Doto', 'Space Mono', monospace;
+    font-size: 72px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.0;
+    color: #FFFFFF;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+  }
+
+  /* The red accent dot — "the poke" */
+  .accent-dot {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    background: #D71921;
+    border-radius: 50%;
+    flex-shrink: 0;
+    position: relative;
+    top: -4px;
+  }
+
+  /* Secondary: Description */
+  .description {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px;
+    font-weight: 300;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+    color: #999999;
+    max-width: 700px;
+    margin-bottom: 40px;
+  }
+
+  /* Tertiary: Tool tags */
+  .tools {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .tool-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #666666;
+    border: 1px solid #333333;
+    padding: 6px 14px;
+    border-radius: 4px;
+  }
+
+  /* Bottom-right: protocol badge */
+  .protocol {
+    position: absolute;
+    bottom: 40px;
+    right: 80px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #333333;
+  }
+</style>
+</head>
+<body>
+  <div class="dot-grid"></div>
+  <div class="content">
+    <div class="label">MCP Server</div>
+    <div class="title">poke-bridge<span class="accent-dot"></span></div>
+    <div class="description">Connect AI assistants to Poke — your iMessage-based AI agent</div>
+    <div class="tools">
+      <span class="tool-tag">send_to_poke</span>
+      <span class="tool-tag">poke_reminder</span>
+      <span class="tool-tag">poke_draft_email</span>
+      <span class="tool-tag">poke_schedule</span>
+    </div>
+  </div>
+  <div class="protocol">Model Context Protocol</div>
+</body>
+</html>
