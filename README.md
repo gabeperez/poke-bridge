@@ -1,17 +1,29 @@
 # poke-bridge
 
-> Send voice commands to your [Poke](https://poke.com) AI assistant via [VoiceOS](https://voiceos.com).
+> An MCP server that connects AI assistants to [Poke](https://poke.com) — your iMessage-based AI agent.
 
-Say something → VoiceOS routes it → Poke acts on it → reply arrives in iMessage.
+Send instructions to Poke by voice, from Claude, from your terminal, or anywhere that supports MCP.
 
 ---
 
-## What It Does
+## What Is Poke?
 
-`poke-bridge` is a local [MCP](https://modelcontextprotocol.io) server that bridges VoiceOS (a voice-controlled macOS AI assistant) to Poke (an iMessage-based AI assistant). Speak a command, and it gets forwarded to Poke's API — which then executes it using your email, calendar, reminders, and other connected integrations.
+[Poke](https://poke.com) is an AI assistant you interact with over iMessage. It can send emails, manage your calendar, set reminders, and more — all through a simple text conversation. `poke-bridge` lets you trigger Poke programmatically from any MCP-compatible client or script.
+
+---
+
+## How It Works
 
 ```
-You speak → VoiceOS → poke-bridge (MCP stdio) → Poke API → Poke acts → iMessage reply
+Your client (VoiceOS / Claude / terminal / cron)
+         ↓
+   poke-bridge (MCP server)
+         ↓
+   Poke API (POST /inbound/api-message)
+         ↓
+   Poke acts on your instruction
+         ↓
+   Reply arrives in iMessage
 ```
 
 ---
@@ -29,70 +41,131 @@ You speak → VoiceOS → poke-bridge (MCP stdio) → Poke API → Poke acts →
 
 ## Requirements
 
-- macOS
-- [VoiceOS](https://voiceos.com) installed
-- [Poke](https://poke.com) account with a **V2 API key** (from [Kitchen](https://poke.com/kitchen) → API Keys)
-- Node.js (via [nvm](https://github.com/nvm-sh/nvm) or direct install)
+- [Poke](https://poke.com) account with a **V2 API key** from [Kitchen](https://poke.com/kitchen) → API Keys
+- Node.js 18+
 
 ---
 
 ## Setup
 
-### 1. Clone the repo
+### 1. Clone and install
 
 ```bash
 git clone https://github.com/gabeperez/poke-bridge.git
 cd poke-bridge
-```
-
-### 2. Install dependencies
-
-```bash
 npm install
 ```
 
-### 3. Add your Poke API key
-
-Copy the example start script and add your key:
+### 2. Configure your API key
 
 ```bash
 cp start.sh.example start.sh
 chmod +x start.sh
 ```
 
-Open `start.sh` and replace `your_v2_key_here` with your actual Poke V2 API key:
+Edit `start.sh` and replace `your_v2_key_here` with your Poke V2 API key:
 
 ```bash
 export POKE_API_KEY="your_v2_key_here"
 ```
 
-> ⚠️ `start.sh` is gitignored — your key will never be committed.
-
-### 4. Connect to VoiceOS
-
-Open VoiceOS → **Settings → Integrations → Custom Integrations → Add**
-
-| Field | Value |
-|---|---|
-| **Name** | 🌴 Poke |
-| **Launch command** | `/absolute/path/to/poke-bridge/start.sh` |
-
-Use the full absolute path — no spaces in the path, no inline env vars (VoiceOS throws `ENAMETOOLONG` otherwise). This is why we use a wrapper script.
+> ⚠️ `start.sh` is gitignored. Your key will never be committed.
 
 ---
 
-## Voice Command Examples
+## Usage
+
+### With VoiceOS (voice commands on macOS)
+
+[VoiceOS](https://voiceos.com) is a macOS app that lets you control your computer by voice. Add poke-bridge as a custom integration:
+
+**Settings → Integrations → Custom Integrations → Add**
+
+| Field | Value |
+|---|---|
+| Name | 🌴 Poke |
+| Launch command | `/absolute/path/to/poke-bridge/start.sh` |
+
+Then speak naturally:
 
 - *"Ask Poke to remind me to call the client tomorrow at 9am"*
 - *"Tell Poke to draft an email to the team about Friday's deadline"*
-- *"Have Poke add a team standup to my calendar Monday at 10am"*
-- *"Send to Poke: what's on my calendar today?"*
+- *"Have Poke add a standup to my calendar Monday at 10am"*
+- *"Ask Poke what's on my calendar today"*
+
+> **Note on the launch command:** VoiceOS throws `ENAMETOOLONG` if you pass inline env vars (`KEY=value command`). The wrapper script sidesteps this.
+
+---
+
+### With Claude Desktop
+
+Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "poke": {
+      "command": "/absolute/path/to/poke-bridge/start.sh"
+    }
+  }
+}
+```
+
+Then in any Claude conversation:
+
+- *"Tell Poke to remind me about the investor call at 3pm"*
+- *"Ask Poke to draft a follow-up email to the NSN team"*
+
+---
+
+### With Cursor / Windsurf
+
+Same MCP config as Claude Desktop. Add to your editor's MCP settings and delegate tasks to Poke while you code.
+
+---
+
+### From the terminal (no MCP needed)
+
+The Poke API is just a single HTTP call:
+
+```bash
+curl 'https://poke.com/api/v1/inbound/api-message' \
+  -H "Authorization: Bearer YOUR_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Remind me to submit the report by 5pm today"}'
+```
+
+---
+
+### From a cron job or script
+
+```bash
+#!/bin/bash
+# Notify Poke when a long job finishes
+run_my_long_job.sh && \
+  curl -s 'https://poke.com/api/v1/inbound/api-message' \
+    -H "Authorization: Bearer $POKE_API_KEY" \
+    -H "Content-Type: application/json" \
+    -d '{"message": "The build finished successfully. Add a done note to my todo list."}'
+```
+
+---
+
+### From macOS Shortcuts
+
+Use a **Get Contents of URL** action with:
+- URL: `https://poke.com/api/v1/inbound/api-message`
+- Method: POST
+- Headers: `Authorization: Bearer YOUR_KEY`, `Content-Type: application/json`
+- Body: `{"message": "your instruction here"}`
+
+Pair it with a Siri shortcut for a fully voice-triggered Poke on iPhone/Apple Watch.
 
 ---
 
 ## How Messages Appear
 
-Poke receives API messages as a webhook — they don't appear on your side of the iMessage thread, but Poke acts on them and replies normally. Every message is prefixed with `[VoiceOS]` so Poke knows the source context.
+Poke receives messages via API as a webhook — they don't show on your side of the iMessage thread, but Poke acts on them and replies normally in iMessage. Every message sent through this bridge is prefixed with `[VoiceOS]` (or whatever source label you configure) so Poke has context about where it came from.
 
 ---
 
@@ -105,14 +178,9 @@ poke-bridge/
 ├── start.sh.example   # Template — copy to start.sh and add your key
 ├── package.json
 ├── tsconfig.json
+├── .gitignore
 └── README.md
 ```
-
----
-
-## Why a Wrapper Script?
-
-VoiceOS launches MCP servers via stdio and doesn't support inline environment variables in the launch command (`KEY=value command` throws `ENAMETOOLONG`). The `start.sh` wrapper exports the key before launching the TypeScript server, keeping things clean.
 
 ---
 
@@ -128,13 +196,13 @@ Content-Type: application/json
 { "message": "[VoiceOS] your instruction here", "source": "VoiceOS" }
 ```
 
-> ⚠️ The legacy `/api/v1/inbound-sms/webhook` endpoint and `pk_`-prefixed V1 keys are **not** supported. You must use a V2 key created in [Kitchen](https://poke.com/kitchen).
+> ⚠️ The legacy `/api/v1/inbound-sms/webhook` endpoint and `pk_`-prefixed V1 keys are **not** supported. Create a V2 key in [Kitchen](https://poke.com/kitchen).
 
 ---
 
 ## Contributing
 
-PRs welcome. If you add new tools (e.g. `poke_search`, `poke_task`), follow the existing pattern in `poke-bridge.ts` and update this README.
+PRs welcome. Ideas for new tools: `poke_search`, `poke_task`, `poke_note`. Follow the existing pattern in `poke-bridge.ts` and update this README.
 
 ---
 
