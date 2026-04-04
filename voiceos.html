@@ -494,18 +494,23 @@
       </p>
     </header>
 
-    <!-- DEMO VIDEO -->
-    <section style="margin-bottom: var(--space-3xl);">
-      <div class="step-number">
-        <span class="lang-en">Quick Demo</span>
-        <span class="lang-ja">クイックデモ</span>
-      </div>
-      <video controls playsinline style="width:100%; border-radius:8px; border:1px solid var(--border); margin-top: var(--space-sm);">
-        <source src="https://github.com/user-attachments/assets/b5496a0f-8a88-4f0e-9eea-3f1e7859881f" type="video/mp4">
-      </video>
-    </section>
+    <!-- DEMO VIDEO LINK -->
+    <p style="margin-bottom: var(--space-3xl);">
+      <a href="#" onclick="openDemo(event)" style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.06em; text-transform:uppercase; color:var(--text-secondary); text-decoration:none; border-bottom:1px solid var(--border-visible); padding-bottom:2px; transition:color 200ms ease-out, border-color 200ms ease-out;" onmouseover="this.style.color='var(--text-primary)';this.style.borderBottomColor='var(--text-primary)'" onmouseout="this.style.color='var(--text-secondary)';this.style.borderBottomColor='var(--border-visible)'">
+        <span class="lang-en">Click for product demo &#9654;</span>
+        <span class="lang-ja">製品デモを見る &#9654;</span>
+      </a>
+    </p>
 
-    <hr class="divider" style="margin-top:0;">
+    <!-- DEMO VIDEO MODAL -->
+    <div id="demo-modal" onclick="closeDemo(event)" style="display:none; position:fixed; inset:0; z-index:1000; background:rgba(0,0,0,0.85); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); align-items:center; justify-content:center;">
+      <div style="position:relative; max-width:90vw; max-height:90vh;">
+        <button onclick="closeDemo(event)" style="position:absolute; top:-36px; right:0; background:none; border:none; color:var(--text-secondary); font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer; padding:4px 0; transition:color 200ms ease-out;" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--text-secondary)'">Close &times;</button>
+        <video id="demo-video" controls playsinline style="display:block; max-width:90vw; max-height:85vh; border-radius:8px; border:1px solid var(--border-visible);">
+          <source src="https://github.com/user-attachments/assets/b5496a0f-8a88-4f0e-9eea-3f1e7859881f" type="video/mp4">
+        </video>
+      </div>
+    </div>
 
     <!-- PROGRESS -->
     <div class="progress">
@@ -768,6 +773,32 @@
         }, 2000);
       });
     }
+
+    function openDemo(e) {
+      e.preventDefault();
+      var modal = document.getElementById('demo-modal');
+      modal.style.display = 'flex';
+      document.getElementById('demo-video').play();
+    }
+
+    function closeDemo(e) {
+      e.stopPropagation();
+      var modal = document.getElementById('demo-modal');
+      if (e.target === modal || e.currentTarget !== modal) {
+        modal.style.display = 'none';
+        document.getElementById('demo-video').pause();
+      }
+    }
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        var modal = document.getElementById('demo-modal');
+        if (modal.style.display === 'flex') {
+          modal.style.display = 'none';
+          document.getElementById('demo-video').pause();
+        }
+      }
+    });
 
     // Default to device language
     if (navigator.language.startsWith('ja')) {
