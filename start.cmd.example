@@ -1,0 +1,10 @@
+@echo off
+REM Copy this file to start.cmd and fill in your Poke V2 API key.
+REM Get your key at https://poke.com/kitchen → API Keys
+REM
+REM start.cmd is gitignored — your key will never be committed.
+
+set POKE_API_KEY=your_v2_key_here
+set POKE_SOURCE=VoiceOS
+
+node "%~dp0poke-bridge.mjs"
