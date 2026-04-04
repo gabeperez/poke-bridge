@@ -6,6 +6,12 @@ Send instructions to Poke by voice, from Claude, from your terminal, or anywhere
 
 ---
 
+## Quick Video DEmo
+
+https://github.com/user-attachments/assets/b5496a0f-8a88-4f0e-9eea-3f1e7859881f
+
+---
+
 ## What Is Poke?
 
 [Poke](https://poke.com) is an AI assistant you interact with over iMessage. It can send emails, manage your calendar, set reminders, and more — all through a simple text conversation. `poke-bridge` lets you trigger Poke programmatically from any MCP-compatible client or script.
