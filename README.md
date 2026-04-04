@@ -107,8 +107,6 @@ Then speak naturally:
 
 > **Why a wrapper script?** VoiceOS throws `ENAMETOOLONG` if you pass inline env vars (`KEY=value command`). The wrapper script exports your key cleanly before launching the server. On Windows, `.sh` files won't work — use `start.bat` instead.
 
----
-
 ### With Claude Desktop
 
 Add to your Claude Desktop config:
@@ -215,7 +213,8 @@ Poke receives messages via API as a webhook — they don't show on your side of 
 
 ```
 poke-bridge/
-├── poke-bridge.ts      # MCP server (TypeScript)
+├── poke-bridge.ts      # MCP server source (TypeScript)
+├── poke-bridge.mjs     # Runtime entrypoint used by launch scripts
 ├── start.sh            # macOS/Linux launch wrapper (gitignored)
 ├── start.sh.example    # macOS/Linux template
 ├── start.bat           # Windows launch wrapper (gitignored)
