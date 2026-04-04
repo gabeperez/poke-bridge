@@ -437,7 +437,7 @@
     <header class="hero">
       <div class="hero-label">Setup Guide</div>
       <h1 class="hero-title">Connect Poke<br>to VoiceOS</h1>
-      <p class="hero-subtitle">Control Poke by voice on your Mac. Four steps, five minutes.</p>
+      <p class="hero-subtitle">Control Poke by voice on your computer. Four steps, five minutes.</p>
     </header>
 
     <!-- PROGRESS -->
@@ -475,7 +475,7 @@
         <div class="step-number">Step 02</div>
         <h2 class="step-title">Download poke-bridge</h2>
         <div class="step-body">
-          <p>Open <strong>Terminal</strong> on your Mac and paste these commands:</p>
+          <p>Open a terminal and paste these commands:</p>
 
           <div class="code-wrapper">
             <div class="code-block">
@@ -486,7 +486,7 @@
 
           <div class="tip">
             <div class="tip-label">Tip</div>
-            <p>You can open Terminal from Spotlight &mdash; press <code class="inline">Cmd + Space</code> and type "Terminal".</p>
+            <p><strong>macOS:</strong> Press <code class="inline">Cmd + Space</code> and type "Terminal".<br><strong>Windows:</strong> Press <code class="inline">Win + R</code>, type <code class="inline">cmd</code>, and press Enter.</p>
           </div>
         </div>
       </section>
@@ -496,7 +496,7 @@
         <div class="step-number">Step 03</div>
         <h2 class="step-title">Add your API key</h2>
         <div class="step-body">
-          <p>Still in Terminal, run:</p>
+          <p><strong>macOS / Linux:</strong></p>
 
           <div class="code-wrapper">
             <div class="code-block">
@@ -505,11 +505,28 @@
             <button class="copy-btn" onclick="copyCode(this, 'cp start.sh.example start.sh\nchmod +x start.sh')">Copy</button>
           </div>
 
-          <p>Now open <code class="inline">start.sh</code> in any text editor and replace <code class="inline">your_v2_key_here</code> with the API key you copied in Step 1.</p>
+          <p>Open <code class="inline">start.sh</code> in any text editor and replace <code class="inline">your_v2_key_here</code> with the API key you copied in Step 1.</p>
 
           <div class="code-wrapper">
             <div class="code-block">
               <code><span class="comment"># start.sh should look like this:</span><br><br>export POKE_API_KEY="<span class="highlight">paste_your_key_here</span>"<br>export POKE_SOURCE="VoiceOS"</code>
+            </div>
+          </div>
+
+          <p><strong>Windows:</strong></p>
+
+          <div class="code-wrapper">
+            <div class="code-block">
+              <code>copy start.cmd.example start.cmd</code>
+            </div>
+            <button class="copy-btn" onclick="copyCode(this, 'copy start.cmd.example start.cmd')">Copy</button>
+          </div>
+
+          <p>Open <code class="inline">start.cmd</code> in any text editor and replace <code class="inline">your_v2_key_here</code> with the API key you copied in Step 1.</p>
+
+          <div class="code-wrapper">
+            <div class="code-block">
+              <code><span class="comment">REM start.cmd should look like this:</span><br><br>set POKE_API_KEY=<span class="highlight">paste_your_key_here</span></code>
             </div>
           </div>
 
@@ -533,14 +550,18 @@
               <span class="field-value">Poke</span>
             </div>
             <div class="field-row">
-              <span class="field-label">Launch Command</span>
+              <span class="field-label">Launch Command (macOS)</span>
               <span class="field-value path">/full/path/to/poke-bridge/start.sh</span>
+            </div>
+            <div class="field-row">
+              <span class="field-label">Launch Command (Windows)</span>
+              <span class="field-value path">C:\full\path\to\poke-bridge\start.cmd</span>
             </div>
           </div>
 
           <div class="tip">
             <div class="tip-label">Finding the path</div>
-            <p>In Terminal, type <code class="inline">cd poke-bridge && pwd</code> to see the full path. Add <code class="inline">/start.sh</code> to the end.</p>
+            <p><strong>macOS / Linux:</strong> In Terminal, type <code class="inline">cd poke-bridge && pwd</code> and add <code class="inline">/start.sh</code> to the end.<br><strong>Windows:</strong> In CMD, type <code class="inline">cd poke-bridge && cd</code> and add <code class="inline">\start.cmd</code> to the end.</p>
           </div>
         </div>
       </section>

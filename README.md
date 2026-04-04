@@ -76,11 +76,11 @@ Open `start.sh` and replace `your_v2_key_here` with your Poke V2 API key.
 
 **Windows:**
 ```cmd
-copy start.bat.example start.bat
+copy start.cmd.example start.cmd
 ```
-Open `start.bat` and replace `your_v2_key_here` with your Poke V2 API key.
+Open `start.cmd` and replace `your_v2_key_here` with your Poke V2 API key.
 
-> ⚠️ `start.sh` and `start.bat` are gitignored. Your key will never be committed.
+> ⚠️ `start.sh` and `start.cmd` are gitignored. Your key will never be committed.
 
 ---
 
@@ -96,7 +96,7 @@ Open `start.bat` and replace `your_v2_key_here` with your Poke V2 API key.
 |---|---|
 | Name | 🌴 Poke |
 | Launch command (macOS) | `/absolute/path/to/poke-bridge/start.sh` |
-| Launch command (Windows) | `C:\absolute\path\to\poke-bridge\start.bat` |
+| Launch command (Windows) | `C:\absolute\path\to\poke-bridge\start.cmd` |
 
 Then speak naturally:
 
@@ -105,7 +105,9 @@ Then speak naturally:
 - *"Have Poke add a standup to my calendar Monday at 10am"*
 - *"Ask Poke what's on my calendar today"*
 
-> **Why a wrapper script?** VoiceOS throws `ENAMETOOLONG` if you pass inline env vars (`KEY=value command`). The wrapper script exports your key cleanly before launching the server. On Windows, `.sh` files won't work — use `start.bat` instead.
+> **Why a wrapper script?** VoiceOS throws `ENAMETOOLONG` if you pass inline env vars (`KEY=value command`). The wrapper script exports your key cleanly before launching the server. On Windows, `.sh` files won't work — use `start.cmd` instead.
+
+---
 
 ### With Claude Desktop
 
@@ -217,8 +219,8 @@ poke-bridge/
 ├── poke-bridge.mjs     # Runtime entrypoint used by launch scripts
 ├── start.sh            # macOS/Linux launch wrapper (gitignored)
 ├── start.sh.example    # macOS/Linux template
-├── start.bat           # Windows launch wrapper (gitignored)
-├── start.bat.example   # Windows template
+├── start.cmd           # Windows launch wrapper (gitignored)
+├── start.cmd.example   # Windows template
 ├── package.json
 ├── tsconfig.json
 ├── .gitignore
