@@ -1,4 +1,4 @@
-#!/usr/bin/env tsx
+#!/usr/bin/env node
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
@@ -7,12 +7,12 @@ const POKE_API_URL = "https://poke.com/api/v1/inbound/api-message";
 const API_KEY = process.env.POKE_API_KEY;
 const SOURCE = process.env.POKE_SOURCE || "poke-bridge";
 
-function logError(message: string, error?: unknown) {
+function logError(message, error) {
   const detail = error instanceof Error ? error.stack || error.message : error ? String(error) : "";
   process.stderr.write(detail ? `[poke-bridge] ${message}: ${detail}\n` : `[poke-bridge] ${message}\n`);
 }
 
-async function sendToPoke(message: string): Promise<{ ok: boolean; text: string }> {
+async function sendToPoke(message) {
   if (!API_KEY) {
     return { ok: false, text: "POKE_API_KEY is not set in the environment." };
   }
@@ -74,7 +74,7 @@ server.tool(
     when: z.string().describe("When the reminder should trigger, e.g. 'tomorrow at 9am'"),
   },
   async ({ task, when }) => {
-    const result = await sendToPoke(`Set a reminder: ${task} — ${when}`);
+    const result = await sendToPoke(`Set a reminder: ${task} - ${when}`);
     return {
       content: [{ type: "text", text: result.ok ? `Reminder set: "${task}" for ${when}` : `Error: ${result.text}` }],
       isError: !result.ok,
@@ -110,9 +110,9 @@ server.tool(
   async ({ event, when, details }) => {
     const parts = [`Add to my calendar: ${event} on ${when}`];
     if (details) parts.push(`Details: ${details}`);
-    const result = await sendToPoke(parts.join(" — "));
+    const result = await sendToPoke(parts.join(" - "));
     return {
-      content: [{ type: "text", text: result.ok ? `Asked Poke to schedule: ${event} — ${when}` : `Error: ${result.text}` }],
+      content: [{ type: "text", text: result.ok ? `Asked Poke to schedule: ${event} - ${when}` : `Error: ${result.text}` }],
       isError: !result.ok,
     };
   }

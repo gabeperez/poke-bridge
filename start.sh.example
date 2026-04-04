@@ -7,4 +7,4 @@
 export POKE_API_KEY="your_v2_key_here"
 export POKE_SOURCE="VoiceOS"  # optional — defaults to "poke-bridge"
 
-exec "$(dirname "$0")/node_modules/.bin/tsx" "$(dirname "$0")/poke-bridge.ts"
+exec node "$(dirname "$0")/poke-bridge.mjs"
