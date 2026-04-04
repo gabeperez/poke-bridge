@@ -489,8 +489,8 @@
       </div>
       <h1 class="hero-title">Connect Poke<br>to VoiceOS</h1>
       <p class="hero-subtitle">
-        <span class="lang-en">Control Poke by voice on your Mac. Four steps, five minutes.</span>
-        <span class="lang-ja">Macで声を使ってPokeを操作しよう。4つのステップ、5分で完了。</span>
+        <span class="lang-en">Control Poke by voice on your Mac or PC. Four steps, five minutes.</span>
+        <span class="lang-ja">MacまたはPCで声を使ってPokeを操作しよう。4つのステップ、5分で完了。</span>
       </p>
     </header>
 
@@ -568,8 +568,8 @@
         </h2>
         <div class="step-body">
           <p>
-            <span class="lang-en">Open <strong>Terminal</strong> on your Mac and paste this command. It will create a new folder and set everything up for you.</span>
-            <span class="lang-ja">Macで<strong>ターミナル</strong>を開いて、このコマンドを貼り付けてください。フォルダが自動で作られて、準備が完了します。</span>
+            <span class="lang-en">Open a terminal and paste this command. It will create a new folder and set everything up for you.</span>
+            <span class="lang-ja">ターミナルを開いて、このコマンドを貼り付けてください。フォルダが自動で作られて、準備が完了します。</span>
           </p>
 
           <div class="code-wrapper">
@@ -582,8 +582,8 @@
           <div class="tip">
             <div class="tip-label">Tip</div>
             <p>
-              <span class="lang-en">You can open Terminal from Spotlight &mdash; press <code class="inline">Cmd + Space</code> and type "Terminal".</span>
-              <span class="lang-ja">ターミナルはSpotlightから開けます &mdash; <code class="inline">Cmd + Space</code> を押して「Terminal」と入力してください。</span>
+              <span class="lang-en"><strong>macOS:</strong> Open Terminal from Spotlight &mdash; press <code class="inline">Cmd + Space</code> and type "Terminal".<br><strong>Windows:</strong> Open Command Prompt or PowerShell &mdash; press <code class="inline">Win + R</code>, type <code class="inline">cmd</code>, and press Enter.</span>
+              <span class="lang-ja"><strong>macOS:</strong> Spotlightからターミナルを開けます &mdash; <code class="inline">Cmd + Space</code> を押して「Terminal」と入力。<br><strong>Windows:</strong> コマンドプロンプトまたはPowerShellを開きます &mdash; <code class="inline">Win + R</code> を押して <code class="inline">cmd</code> と入力してEnter。</span>
             </p>
           </div>
         </div>
@@ -597,8 +597,9 @@
           <span class="lang-ja">APIキーを設定する</span>
         </h2>
         <div class="step-body">
+          <p><strong>macOS / Linux:</strong></p>
           <p>
-            <span class="lang-en">Still in Terminal, run:</span>
+            <span class="lang-en">Still in your terminal, run:</span>
             <span class="lang-ja">ターミナルで続けて、これを実行してください：</span>
           </p>
 
@@ -610,13 +611,37 @@
           </div>
 
           <p>
-            <span class="lang-en">Now open <code class="inline">start.sh</code> in any text editor and replace <code class="inline">your_v2_key_here</code> with the API key you copied in Step 1.</span>
+            <span class="lang-en">Open <code class="inline">start.sh</code> in any text editor and replace <code class="inline">your_v2_key_here</code> with the API key you copied in Step 1.</span>
             <span class="lang-ja"><code class="inline">start.sh</code> をテキストエディタで開いて、<code class="inline">your_v2_key_here</code> をステップ1でコピーしたAPIキーに置き換えてください。</span>
           </p>
 
           <div class="code-wrapper">
             <div class="code-block">
               <code><span class="comment lang-en"># start.sh should look like this:</span><span class="comment lang-ja"># start.sh はこんな感じになります：</span><br><br>export POKE_API_KEY="<span class="highlight">paste_your_key_here</span>"<br>export POKE_SOURCE="VoiceOS"</code>
+            </div>
+          </div>
+
+          <p><strong>Windows:</strong></p>
+          <p>
+            <span class="lang-en">In Command Prompt or PowerShell, run:</span>
+            <span class="lang-ja">コマンドプロンプトまたはPowerShellで、これを実行してください：</span>
+          </p>
+
+          <div class="code-wrapper">
+            <div class="code-block">
+              <code>copy start.cmd.example start.cmd</code>
+            </div>
+            <button class="copy-btn" onclick="copyCode(this, 'copy start.cmd.example start.cmd')">Copy</button>
+          </div>
+
+          <p>
+            <span class="lang-en">Open <code class="inline">start.cmd</code> in any text editor and replace <code class="inline">your_v2_key_here</code> with the API key you copied in Step 1.</span>
+            <span class="lang-ja"><code class="inline">start.cmd</code> をテキストエディタで開いて、<code class="inline">your_v2_key_here</code> をステップ1でコピーしたAPIキーに置き換えてください。</span>
+          </p>
+
+          <div class="code-wrapper">
+            <div class="code-block">
+              <code><span class="comment lang-en">REM start.cmd should look like this:</span><span class="comment lang-ja">REM start.cmd はこんな感じになります：</span><br><br>set POKE_API_KEY=<span class="highlight">paste_your_key_here</span><br>set POKE_SOURCE=VoiceOS</code>
             </div>
           </div>
 
@@ -652,8 +677,18 @@
               <span class="field-value">Poke</span>
             </div>
             <div class="field-row">
-              <span class="field-label">Launch Command</span>
+              <span class="field-label">
+                <span class="lang-en">Launch Command (macOS)</span>
+                <span class="lang-ja">起動コマンド（macOS）</span>
+              </span>
               <span class="field-value path">/full/path/to/poke-bridge/start.sh</span>
+            </div>
+            <div class="field-row">
+              <span class="field-label">
+                <span class="lang-en">Launch Command (Windows)</span>
+                <span class="lang-ja">起動コマンド（Windows）</span>
+              </span>
+              <span class="field-value path">C:\full\path\to\poke-bridge\start.cmd</span>
             </div>
           </div>
 
@@ -663,8 +698,8 @@
               <span class="lang-ja">パスの確認方法</span>
             </div>
             <p>
-              <span class="lang-en">In Terminal, type <code class="inline">cd poke-bridge && pwd</code> to see the full path. Add <code class="inline">/start.sh</code> to the end.</span>
-              <span class="lang-ja">ターミナルで <code class="inline">cd poke-bridge && pwd</code> と入力すると、パスが表示されます。その後ろに <code class="inline">/start.sh</code> を付けてください。</span>
+              <span class="lang-en"><strong>macOS:</strong> In Terminal, type <code class="inline">cd poke-bridge && pwd</code> to see the full path. Add <code class="inline">/start.sh</code> to the end.<br><strong>Windows:</strong> In Command Prompt, type <code class="inline">cd poke-bridge && cd</code> to see the full path. Add <code class="inline">\start.cmd</code> to the end.</span>
+              <span class="lang-ja"><strong>macOS:</strong> ターミナルで <code class="inline">cd poke-bridge && pwd</code> と入力するとパスが表示されます。その後ろに <code class="inline">/start.sh</code> を付けてください。<br><strong>Windows:</strong> コマンドプロンプトで <code class="inline">cd poke-bridge && cd</code> と入力するとパスが表示されます。その後ろに <code class="inline">\start.cmd</code> を付けてください。</span>
             </p>
           </div>
         </div>
