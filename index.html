@@ -120,24 +120,29 @@ cd poke-bridge
 npm install</code></pre>
 
       <h3>2. Configure your API key</h3>
+      <p><strong>macOS / Linux:</strong></p>
       <pre><code>cp start.sh.example start.sh
 chmod +x start.sh</code></pre>
-      <p>Edit <code>start.sh</code> and replace <code>your_v2_key_here</code> with your Poke V2 API key:</p>
-      <pre><code>export POKE_API_KEY="your_v2_key_here"
-export POKE_SOURCE="VoiceOS"  # optional — defaults to "poke-bridge"</code></pre>
-      <blockquote>⚠️ <code>start.sh</code> is gitignored. Your key will never be committed.</blockquote>
+      <p>Open <code>start.sh</code> and replace <code>your_v2_key_here</code> with your Poke V2 API key.</p>
+
+      <p><strong>Windows:</strong></p>
+      <pre><code>copy start.cmd.example start.cmd</code></pre>
+      <p>Open <code>start.cmd</code> and replace <code>your_v2_key_here</code> with your Poke V2 API key.</p>
+
+      <blockquote>⚠️ <code>start.sh</code> and <code>start.cmd</code> are gitignored. Your key will never be committed.</blockquote>
     </section>
 
     <section>
       <h2>Usage</h2>
-      <h3>With VoiceOS (voice commands on macOS)</h3>
-      <p><a href="https://voiceos.com">VoiceOS</a> is a macOS app that lets you control your computer by voice. Add poke-bridge as a custom integration:</p>
+      <h3>With VoiceOS</h3>
+      <p><a href="https://voiceos.com">VoiceOS</a> is a voice productivity app that lets you control your computer by speaking. Add poke-bridge as a custom integration:</p>
       <p><strong>Settings → Integrations → Custom Integrations → Add</strong></p>
       <table>
         <thead><tr><th>Field</th><th>Value</th></tr></thead>
         <tbody>
           <tr><td>Name</td><td>🌴 Poke</td></tr>
-          <tr><td>Launch command</td><td><code>/absolute/path/to/poke-bridge/start.sh</code></td></tr>
+          <tr><td>Launch command (macOS)</td><td><code>/absolute/path/to/poke-bridge/start.sh</code></td></tr>
+          <tr><td>Launch command (Windows)</td><td><code>C:\absolute\path\to\poke-bridge\start.cmd</code></td></tr>
         </tbody>
       </table>
       <p>Then speak naturally:</p>
@@ -147,10 +152,15 @@ export POKE_SOURCE="VoiceOS"  # optional — defaults to "poke-bridge"</code></p
         <li><em>“Have Poke add a standup to my calendar Monday at 10am”</em></li>
         <li><em>“Ask Poke what's on my calendar today”</em></li>
       </ul>
-      <p><strong>Note:</strong> VoiceOS throws <code>ENAMETOOLONG</code> if you pass inline env vars (<code>KEY=value command</code>). The <code>start.sh</code> wrapper exports your key cleanly before launching the server.</p>
+      <p><strong>Why a wrapper script?</strong> VoiceOS throws <code>ENAMETOOLONG</code> if you pass inline env vars (<code>KEY=value command</code>). The wrapper script exports your key cleanly before launching the server. On Windows, <code>.sh</code> files won't work — use <code>start.cmd</code> instead.</p>
 
       <h3>With Claude Desktop</h3>
-      <p>Add to <code>~/Library/Application Support/Claude/claude_desktop_config.json</code>:</p>
+      <p>Add to your Claude Desktop config:</p>
+      <ul>
+        <li><strong>macOS:</strong> <code>~/Library/Application Support/Claude/claude_desktop_config.json</code></li>
+        <li><strong>Windows:</strong> <code>%APPDATA%\Claude\claude_desktop_config.json</code></li>
+      </ul>
+      <p><strong>macOS / Linux:</strong></p>
       <pre><code>{
   &quot;mcpServers&quot;: {
     &quot;poke&quot;: {
@@ -163,33 +173,33 @@ export POKE_SOURCE="VoiceOS"  # optional — defaults to "poke-bridge"</code></p
     }
   }
 }</code></pre>
-      <p>Restart Claude Desktop after saving. Then in any conversation:</p>
-      <ul>
-        <li><em>“Tell Poke to remind me about the investor call at 3pm”</em></li>
-        <li><em>“Ask Poke to draft a follow-up email to the NSN team”</em></li>
-      </ul>
-
-      <h3>With Cursor / Windsurf</h3>
-      <p>Add the same block to your editor's MCP config (usually <code>.cursor/mcp.json</code> or equivalent):</p>
+      <p><strong>Windows</strong> — use <code>tsx.cmd</code> and backslashes:</p>
       <pre><code>{
   &quot;mcpServers&quot;: {
     &quot;poke&quot;: {
-      &quot;command&quot;: &quot;/absolute/path/to/poke-bridge/node_modules/.bin/tsx&quot;,
-      &quot;args&quot;: [&quot;/absolute/path/to/poke-bridge/poke-bridge.ts&quot;],
+      &quot;command&quot;: &quot;C:\\path\\to\\poke-bridge\\node_modules\\.bin\\tsx.cmd&quot;,
+      &quot;args&quot;: [&quot;C:\\path\\to\\poke-bridge\\poke-bridge.ts&quot;],
       &quot;env&quot;: {
         &quot;POKE_API_KEY&quot;: &quot;your_v2_key_here&quot;,
-        &quot;POKE_SOURCE&quot;: &quot;Cursor&quot;
+        &quot;POKE_SOURCE&quot;: &quot;Claude Desktop&quot;
       }
     }
   }
 }</code></pre>
+      <p>Restart Claude Desktop after saving.</p>
+
+      <h3>With Cursor / Windsurf</h3>
+      <p>Same config as Claude Desktop above. Add to your editor's MCP settings file and restart.</p>
 
       <h3>From the terminal (no MCP needed)</h3>
-      <p>The Poke API is a single POST call:</p>
+      <p>The Poke API is a single POST call.</p>
+      <p><strong>macOS / Linux:</strong></p>
       <pre><code>curl -X POST https://poke.com/api/v1/inbound/api-message \
   -H &quot;Authorization: Bearer YOUR_KEY&quot; \
   -H &quot;Content-Type: application/json&quot; \
   -d '{&quot;message&quot;: &quot;will it rain today?&quot;}'</code></pre>
+      <p><strong>Windows CMD</strong> — use escaped double quotes, no single quotes:</p>
+      <pre><code>curl -X POST https://poke.com/api/v1/inbound/api-message -H &quot;Authorization: Bearer YOUR_KEY&quot; -H &quot;Content-Type: application/json&quot; -d &quot;{\&quot;message\&quot;: \&quot;will it rain today?\&quot;}&quot;</code></pre>
       <p>Expected response:</p>
       <pre><code>{&quot;success&quot;: true, &quot;message&quot;: &quot;Message sent successfully&quot;}</code></pre>
 
@@ -227,9 +237,12 @@ curl -s -X POST https://poke.com/api/v1/inbound/api-message \
     <section>
       <h2>Project Structure</h2>
       <pre><code>poke-bridge/
-├── poke-bridge.ts     # MCP server (TypeScript)
-├── start.sh           # Launch wrapper with API key (gitignored)
+├── poke-bridge.ts     # MCP server source (TypeScript)
+├── poke-bridge.mjs    # Runtime entrypoint used by launch scripts
+├── start.sh           # Launch wrapper for macOS/Linux (gitignored)
 ├── start.sh.example   # Template — copy to start.sh and add your key
+├── start.cmd          # Launch wrapper for Windows (gitignored)
+├── start.cmd.example  # Template — copy to start.cmd and add your key
 ├── package.json
 ├── tsconfig.json
 ├── .gitignore
