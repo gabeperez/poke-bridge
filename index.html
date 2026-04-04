@@ -9,6 +9,37 @@
   <meta property="og:image" content="https://raw.githubusercontent.com/gabeperez/poke-bridge/main/og-image.png">
   <style>
     :root { color-scheme: dark; }
+
+    /* ── LANGUAGE TOGGLE ── */
+    .lang-toggle {
+      display: flex;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 999px;
+      overflow: hidden;
+      width: fit-content;
+      margin-bottom: 20px;
+    }
+    .lang-btn {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border: none;
+      background: transparent;
+      color: rgba(243,243,243,0.5);
+      cursor: pointer;
+      transition: background 200ms ease-out, color 200ms ease-out;
+    }
+    .lang-btn.active {
+      background: #f3f3f3;
+      color: #0b0b0b;
+    }
+    [data-lang="ja"] .lang-en,
+    [data-lang="en"] .lang-ja {
+      display: none;
+    }
+
     body {
       margin: 0;
       font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -51,25 +82,46 @@
     .pill { display: inline-block; padding: 3px 10px; border: 1px solid rgba(255,255,255,0.18); border-radius: 999px; margin-right: 8px; margin-bottom: 8px; }
   </style>
 </head>
-<body>
+<body data-lang="en">
   <div class="wrap">
+    <!-- LANGUAGE TOGGLE -->
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" onclick="setLang('ja')">JA</button>
+    </div>
+
     <header>
       <div class="pill">MCP server</div>
       <div class="pill">Poke</div>
       <div class="pill">VoiceOS</div>
       <h1>poke-bridge</h1>
-      <p class="muted">An MCP server that connects AI assistants to <a href="https://poke.com">Poke</a> — your iMessage-based AI agent.</p>
-      <p>Send instructions to Poke by voice, from Claude, from your terminal, or anywhere that supports MCP.</p>
+      <p class="muted">
+        <span class="lang-en">An MCP server that connects AI assistants to <a href="https://poke.com">Poke</a> — your iMessage-based AI agent.</span>
+        <span class="lang-ja">AIアシスタントを<a href="https://poke.com">Poke</a>（iMessageベースのAIエージェント）に接続するMCPサーバー。</span>
+      </p>
+      <p>
+        <span class="lang-en">Send instructions to Poke by voice, from Claude, from your terminal, or anywhere that supports MCP.</span>
+        <span class="lang-ja">音声、Claude、ターミナル、またはMCP対応のどこからでもPokeに指示を送れます。</span>
+      </p>
     </header>
 
     <section>
-      <h2>What Is Poke?</h2>
-      <p><a href="https://poke.com">Poke</a> is an AI assistant you interact with over iMessage. It can send emails, manage your calendar, set reminders, and more — all through a simple text conversation. <code>poke-bridge</code> lets you trigger Poke programmatically from any MCP-compatible client or script.</p>
+      <h2>
+        <span class="lang-en">What Is Poke?</span>
+        <span class="lang-ja">Pokeとは？</span>
+      </h2>
+      <p>
+        <span class="lang-en"><a href="https://poke.com">Poke</a> is an AI assistant you interact with over iMessage. It can send emails, manage your calendar, set reminders, and more — all through a simple text conversation. <code>poke-bridge</code> lets you trigger Poke programmatically from any MCP-compatible client or script.</span>
+        <span class="lang-ja"><a href="https://poke.com">Poke</a>はiMessageで使えるAIアシスタントです。メール送信、カレンダー管理、リマインダー設定など、テキストで会話するだけで実行できます。<code>poke-bridge</code>を使えば、MCP対応のクライアントやスクリプトからPokeをプログラム的に操作できます。</span>
+      </p>
     </section>
 
     <section>
-      <h2>How It Works</h2>
-      <pre>Your client (VoiceOS / Claude / terminal / cron)
+      <h2>
+        <span class="lang-en">How It Works</span>
+        <span class="lang-ja">仕組み</span>
+      </h2>
+      <pre class="lang-en">Your client (VoiceOS / Claude / terminal / cron)
          ↓
    poke-bridge (MCP server)
          ↓
@@ -78,11 +130,23 @@
    Poke acts on your instruction
          ↓
    Reply arrives in iMessage</pre>
+      <pre class="lang-ja">クライアント（VoiceOS / Claude / ターミナル / cron）
+         ↓
+   poke-bridge（MCPサーバー）
+         ↓
+   Poke API（POST /inbound/api-message）
+         ↓
+   Pokeが指示を実行
+         ↓
+   iMessageに返信が届く</pre>
     </section>
 
     <section>
-      <h2>Tools Exposed</h2>
-      <table>
+      <h2>
+        <span class="lang-en">Tools Exposed</span>
+        <span class="lang-ja">公開ツール</span>
+      </h2>
+      <table class="lang-en">
         <thead><tr><th>Tool</th><th>What it does</th></tr></thead>
         <tbody>
           <tr><td><code>send_to_poke</code></td><td>General-purpose — send any message or instruction</td></tr>
@@ -91,51 +155,104 @@
           <tr><td><code>poke_schedule</code></td><td>Add a calendar event via Poke</td></tr>
         </tbody>
       </table>
+      <table class="lang-ja">
+        <thead><tr><th>ツール</th><th>機能</th></tr></thead>
+        <tbody>
+          <tr><td><code>send_to_poke</code></td><td>汎用 — メッセージや指示を送信</td></tr>
+          <tr><td><code>poke_reminder</code></td><td>タスクと時間を指定してリマインダーを設定</td></tr>
+          <tr><td><code>poke_draft_email</code></td><td>メールの下書きや送信をPokeに依頼</td></tr>
+          <tr><td><code>poke_schedule</code></td><td>Poke経由でカレンダーにイベントを追加</td></tr>
+        </tbody>
+      </table>
     </section>
 
     <section>
-      <h2>Configuration</h2>
-      <table>
+      <h2>
+        <span class="lang-en">Configuration</span>
+        <span class="lang-ja">設定</span>
+      </h2>
+      <table class="lang-en">
         <thead><tr><th>Variable</th><th>Required</th><th>Default</th><th>Description</th></tr></thead>
         <tbody>
           <tr><td><code>POKE_API_KEY</code></td><td>Yes</td><td>—</td><td>Your Poke V2 API key from <a href="https://poke.com/kitchen">Kitchen</a></td></tr>
           <tr><td><code>POKE_SOURCE</code></td><td>No</td><td><code>poke-bridge</code></td><td>Label prefixed to messages so Poke knows where they came from (e.g. <code>VoiceOS</code>, <code>Claude Desktop</code>, <code>Cursor</code>)</td></tr>
         </tbody>
       </table>
+      <table class="lang-ja">
+        <thead><tr><th>変数</th><th>必須</th><th>デフォルト</th><th>説明</th></tr></thead>
+        <tbody>
+          <tr><td><code>POKE_API_KEY</code></td><td>はい</td><td>—</td><td><a href="https://poke.com/kitchen">Kitchen</a>から取得したPoke V2 APIキー</td></tr>
+          <tr><td><code>POKE_SOURCE</code></td><td>いいえ</td><td><code>poke-bridge</code></td><td>メッセージに付けるラベル。Pokeがどこから送られたか分かるようにします（例：<code>VoiceOS</code>、<code>Claude Desktop</code>、<code>Cursor</code>）</td></tr>
+        </tbody>
+      </table>
     </section>
 
     <section>
-      <h2>Requirements</h2>
-      <ul>
+      <h2>
+        <span class="lang-en">Requirements</span>
+        <span class="lang-ja">必要なもの</span>
+      </h2>
+      <ul class="lang-en">
         <li><a href="https://poke.com">Poke</a> account with a <strong>V2 API key</strong> from <a href="https://poke.com/kitchen">Kitchen</a> → API Keys</li>
+        <li>Node.js 18+</li>
+      </ul>
+      <ul class="lang-ja">
+        <li><a href="https://poke.com">Poke</a>アカウントと<a href="https://poke.com/kitchen">Kitchen</a> → API Keysから取得した<strong>V2 APIキー</strong></li>
         <li>Node.js 18+</li>
       </ul>
     </section>
 
     <section>
-      <h2>Setup</h2>
-      <h3>1. Clone and install</h3>
+      <h2>
+        <span class="lang-en">Setup</span>
+        <span class="lang-ja">セットアップ</span>
+      </h2>
+      <h3>
+        <span class="lang-en">1. Clone and install</span>
+        <span class="lang-ja">1. クローンとインストール</span>
+      </h3>
       <pre><code>git clone https://github.com/gabeperez/poke-bridge.git
 cd poke-bridge
 npm install</code></pre>
 
-      <h3>2. Configure your API key</h3>
+      <h3>
+        <span class="lang-en">2. Configure your API key</span>
+        <span class="lang-ja">2. APIキーの設定</span>
+      </h3>
       <p><strong>macOS / Linux:</strong></p>
       <pre><code>cp start.sh.example start.sh
 chmod +x start.sh</code></pre>
-      <p>Open <code>start.sh</code> and replace <code>your_v2_key_here</code> with your Poke V2 API key.</p>
+      <p>
+        <span class="lang-en">Open <code>start.sh</code> and replace <code>your_v2_key_here</code> with your Poke V2 API key.</span>
+        <span class="lang-ja"><code>start.sh</code>を開いて、<code>your_v2_key_here</code>をPoke V2 APIキーに置き換えてください。</span>
+      </p>
 
       <p><strong>Windows:</strong></p>
       <pre><code>copy start.cmd.example start.cmd</code></pre>
-      <p>Open <code>start.cmd</code> and replace <code>your_v2_key_here</code> with your Poke V2 API key.</p>
+      <p>
+        <span class="lang-en">Open <code>start.cmd</code> and replace <code>your_v2_key_here</code> with your Poke V2 API key.</span>
+        <span class="lang-ja"><code>start.cmd</code>を開いて、<code>your_v2_key_here</code>をPoke V2 APIキーに置き換えてください。</span>
+      </p>
 
-      <blockquote>⚠️ <code>start.sh</code> and <code>start.cmd</code> are gitignored. Your key will never be committed.</blockquote>
+      <blockquote>
+        <span class="lang-en">⚠️ <code>start.sh</code> and <code>start.cmd</code> are gitignored. Your key will never be committed.</span>
+        <span class="lang-ja">⚠️ <code>start.sh</code>と<code>start.cmd</code>はgitignoreされています。キーがコミットされることはありません。</span>
+      </blockquote>
     </section>
 
     <section>
-      <h2>Usage</h2>
-      <h3>With VoiceOS</h3>
-      <p><a href="https://voiceos.com">VoiceOS</a> is a voice productivity app that lets you control your computer by speaking. Add poke-bridge as a custom integration:</p>
+      <h2>
+        <span class="lang-en">Usage</span>
+        <span class="lang-ja">使い方</span>
+      </h2>
+      <h3>
+        <span class="lang-en">With VoiceOS</span>
+        <span class="lang-ja">VoiceOSで使う</span>
+      </h3>
+      <p>
+        <span class="lang-en"><a href="https://voiceos.com">VoiceOS</a> is a voice productivity app that lets you control your computer by speaking. Add poke-bridge as a custom integration:</span>
+        <span class="lang-ja"><a href="https://voiceos.com">VoiceOS</a>は音声でコンピュータを操作できる生産性アプリです。poke-bridgeをカスタムインテグレーションとして追加してください：</span>
+      </p>
       <p><strong>Settings → Integrations → Custom Integrations → Add</strong></p>
       <table>
         <thead><tr><th>Field</th><th>Value</th></tr></thead>
@@ -145,17 +262,35 @@ chmod +x start.sh</code></pre>
           <tr><td>Launch command (Windows)</td><td><code>C:\absolute\path\to\poke-bridge\start.cmd</code></td></tr>
         </tbody>
       </table>
-      <p>Then speak naturally:</p>
-      <ul>
-        <li><em>“Ask Poke to remind me to call the client tomorrow at 9am”</em></li>
-        <li><em>“Tell Poke to draft an email to the team about Friday's deadline”</em></li>
-        <li><em>“Have Poke add a standup to my calendar Monday at 10am”</em></li>
-        <li><em>“Ask Poke what's on my calendar today”</em></li>
+      <p>
+        <span class=”lang-en”>Then speak naturally:</span>
+        <span class=”lang-ja”>自然に話しかけてください：</span>
+      </p>
+      <ul class=”lang-en”>
+        <li><em>”Ask Poke to remind me to call the client tomorrow at 9am”</em></li>
+        <li><em>”Tell Poke to draft an email to the team about Friday's deadline”</em></li>
+        <li><em>”Have Poke add a standup to my calendar Monday at 10am”</em></li>
+        <li><em>”Ask Poke what's on my calendar today”</em></li>
       </ul>
-      <p><strong>Why a wrapper script?</strong> VoiceOS throws <code>ENAMETOOLONG</code> if you pass inline env vars (<code>KEY=value command</code>). The wrapper script exports your key cleanly before launching the server. On Windows, <code>.sh</code> files won't work — use <code>start.cmd</code> instead.</p>
+      <ul class=”lang-ja”>
+        <li><em>「Pokeに明日の朝9時にクライアントに電話するリマインダーをお願いして」</em></li>
+        <li><em>「Pokeに金曜の締め切りについてチームにメールを書いてもらって」</em></li>
+        <li><em>「Pokeに月曜の朝10時にスタンドアップをカレンダーに追加して」</em></li>
+        <li><em>「Pokeに今日のカレンダーを聞いて」</em></li>
+      </ul>
+      <p>
+        <span class=”lang-en”><strong>Why a wrapper script?</strong> VoiceOS throws <code>ENAMETOOLONG</code> if you pass inline env vars (<code>KEY=value command</code>). The wrapper script exports your key cleanly before launching the server. On Windows, <code>.sh</code> files won't work — use <code>start.cmd</code> instead.</span>
+        <span class=”lang-ja”><strong>なぜラッパースクリプトが必要？</strong> VoiceOSはインライン環境変数（<code>KEY=value command</code>）を渡すと<code>ENAMETOOLONG</code>エラーを起こします。ラッパースクリプトはサーバー起動前にキーをきれいにエクスポートします。Windowsでは<code>.sh</code>ファイルは動かないので、代わりに<code>start.cmd</code>を使ってください。</span>
+      </p>
 
-      <h3>With Claude Desktop</h3>
-      <p>Add to your Claude Desktop config:</p>
+      <h3>
+        <span class="lang-en">With Claude Desktop</span>
+        <span class="lang-ja">Claude Desktopで使う</span>
+      </h3>
+      <p>
+        <span class="lang-en">Add to your Claude Desktop config:</span>
+        <span class="lang-ja">Claude Desktopの設定ファイルに追加してください：</span>
+      </p>
       <ul>
         <li><strong>macOS:</strong> <code>~/Library/Application Support/Claude/claude_desktop_config.json</code></li>
         <li><strong>Windows:</strong> <code>%APPDATA%\Claude\claude_desktop_config.json</code></li>
@@ -186,13 +321,28 @@ chmod +x start.sh</code></pre>
     }
   }
 }</code></pre>
-      <p>Restart Claude Desktop after saving.</p>
+      <p>
+        <span class="lang-en">Restart Claude Desktop after saving.</span>
+        <span class="lang-ja">保存したらClaude Desktopを再起動してください。</span>
+      </p>
 
-      <h3>With Cursor / Windsurf</h3>
-      <p>Same config as Claude Desktop above. Add to your editor's MCP settings file and restart.</p>
+      <h3>
+        <span class="lang-en">With Cursor / Windsurf</span>
+        <span class="lang-ja">Cursor / Windsurfで使う</span>
+      </h3>
+      <p>
+        <span class="lang-en">Same config as Claude Desktop above. Add to your editor's MCP settings file and restart.</span>
+        <span class="lang-ja">上記のClaude Desktopと同じ設定です。エディターのMCP設定ファイルに追加して再起動してください。</span>
+      </p>
 
-      <h3>From the terminal (no MCP needed)</h3>
-      <p>The Poke API is a single POST call.</p>
+      <h3>
+        <span class="lang-en">From the terminal (no MCP needed)</span>
+        <span class="lang-ja">ターミナルから（MCP不要）</span>
+      </h3>
+      <p>
+        <span class="lang-en">The Poke API is a single POST call.</span>
+        <span class="lang-ja">Poke APIは1つのPOSTリクエストで呼び出せます。</span>
+      </p>
       <p><strong>macOS / Linux:</strong></p>
       <pre><code>curl -X POST https://poke.com/api/v1/inbound/api-message \
   -H &quot;Authorization: Bearer YOUR_KEY&quot; \
@@ -200,10 +350,16 @@ chmod +x start.sh</code></pre>
   -d '{&quot;message&quot;: &quot;will it rain today?&quot;}'</code></pre>
       <p><strong>Windows CMD</strong> — use escaped double quotes, no single quotes:</p>
       <pre><code>curl -X POST https://poke.com/api/v1/inbound/api-message -H &quot;Authorization: Bearer YOUR_KEY&quot; -H &quot;Content-Type: application/json&quot; -d &quot;{\&quot;message\&quot;: \&quot;will it rain today?\&quot;}&quot;</code></pre>
-      <p>Expected response:</p>
+      <p>
+        <span class="lang-en">Expected response:</span>
+        <span class="lang-ja">期待されるレスポンス：</span>
+      </p>
       <pre><code>{&quot;success&quot;: true, &quot;message&quot;: &quot;Message sent successfully&quot;}</code></pre>
 
-      <h3>From a cron job or script</h3>
+      <h3>
+        <span class="lang-en">From a cron job or script</span>
+        <span class="lang-ja">cronジョブやスクリプトから</span>
+      </h3>
       <pre><code>#!/bin/bash
 export POKE_API_KEY=&quot;your_v2_key_here&quot;
 
@@ -211,31 +367,52 @@ curl -s -X POST https://poke.com/api/v1/inbound/api-message \
   -H &quot;Authorization: Bearer $POKE_API_KEY&quot; \
   -H &quot;Content-Type: application/json&quot; \
   -d '{&quot;message&quot;: &quot;The build finished. Please add a note to my todo list.&quot;}'</code></pre>
-      <p>Or trigger from any script after a long job:</p>
+      <p>
+        <span class="lang-en">Or trigger from any script after a long job:</span>
+        <span class="lang-ja">長時間のジョブの後にスクリプトからトリガーすることもできます：</span>
+      </p>
       <pre><code>run_my_long_job.sh &amp;&amp; \
   curl -s -X POST https://poke.com/api/v1/inbound/api-message \
     -H &quot;Authorization: Bearer $POKE_API_KEY&quot; \
     -H &quot;Content-Type: application/json&quot; \
     -d '{&quot;message&quot;: &quot;Job done. Send me a summary of what ran today.&quot;}'</code></pre>
 
-      <h3>From macOS Shortcuts</h3>
-      <p>Use a <strong>Get Contents of URL</strong> action:</p>
+      <h3>
+        <span class="lang-en">From macOS Shortcuts</span>
+        <span class="lang-ja">macOSショートカットから</span>
+      </h3>
+      <p>
+        <span class="lang-en">Use a <strong>Get Contents of URL</strong> action:</span>
+        <span class="lang-ja"><strong>URLの内容を取得</strong>アクションを使います：</span>
+      </p>
       <ul>
         <li><strong>URL:</strong> <code>https://poke.com/api/v1/inbound/api-message</code></li>
-        <li><strong>Method:</strong> POST</li>
-        <li><strong>Headers:</strong> <code>Authorization: Bearer YOUR_KEY</code>, <code>Content-Type: application/json</code></li>
-        <li><strong>Request Body:</strong> JSON — <code>{&quot;message&quot;: &quot;your instruction here&quot;, &quot;source&quot;: &quot;Shortcuts&quot;}</code></li>
+        <li><strong><span class="lang-en">Method:</span><span class="lang-ja">メソッド：</span></strong> POST</li>
+        <li><strong><span class="lang-en">Headers:</span><span class="lang-ja">ヘッダー：</span></strong> <code>Authorization: Bearer YOUR_KEY</code>, <code>Content-Type: application/json</code></li>
+        <li><strong><span class="lang-en">Request Body:</span><span class="lang-ja">リクエストボディ：</span></strong> JSON — <code>{&quot;message&quot;: &quot;your instruction here&quot;, &quot;source&quot;: &quot;Shortcuts&quot;}</code></li>
       </ul>
-      <p>Pair it with a Siri phrase for fully voice-triggered Poke on iPhone or Apple Watch.</p>
+      <p>
+        <span class="lang-en">Pair it with a Siri phrase for fully voice-triggered Poke on iPhone or Apple Watch.</span>
+        <span class="lang-ja">Siriフレーズと組み合わせれば、iPhoneやApple Watchから完全に音声でPokeを操作できます。</span>
+      </p>
     </section>
 
     <section>
-      <h2>How Messages Appear</h2>
-      <p>Poke receives messages via API as a webhook — they don't show on your side of the iMessage thread, but Poke acts on them and replies normally in iMessage. Every message sent through this bridge is prefixed with <code>[poke-bridge]</code> (or your custom <code>POKE_SOURCE</code>) so Poke has context about where it came from.</p>
+      <h2>
+        <span class="lang-en">How Messages Appear</span>
+        <span class="lang-ja">メッセージの表示について</span>
+      </h2>
+      <p>
+        <span class="lang-en">Poke receives messages via API as a webhook — they don't show on your side of the iMessage thread, but Poke acts on them and replies normally in iMessage. Every message sent through this bridge is prefixed with <code>[poke-bridge]</code> (or your custom <code>POKE_SOURCE</code>) so Poke has context about where it came from.</span>
+        <span class="lang-ja">PokeはAPI経由でメッセージを受信します。iMessageのスレッドにはあなた側には表示されませんが、Pokeはそれに基づいて行動し、iMessageで通常通り返信します。このブリッジを通じて送られるメッセージにはすべて<code>[poke-bridge]</code>（またはカスタムの<code>POKE_SOURCE</code>）がプレフィックスとして付き、Pokeがどこから送られたか把握できます。</span>
+      </p>
     </section>
 
     <section>
-      <h2>Project Structure</h2>
+      <h2>
+        <span class="lang-en">Project Structure</span>
+        <span class="lang-ja">プロジェクト構成</span>
+      </h2>
       <pre><code>poke-bridge/
 ├── poke-bridge.ts     # MCP server source (TypeScript)
 ├── poke-bridge.mjs    # Runtime entrypoint used by launch scripts
@@ -250,25 +427,58 @@ curl -s -X POST https://poke.com/api/v1/inbound/api-message \
     </section>
 
     <section>
-      <h2>API Reference</h2>
-      <p>This bridge uses the <a href="https://poke.com/docs/developers/api">Poke V2 API</a>:</p>
+      <h2>
+        <span class="lang-en">API Reference</span>
+        <span class="lang-ja">APIリファレンス</span>
+      </h2>
+      <p>
+        <span class="lang-en">This bridge uses the <a href="https://poke.com/docs/developers/api">Poke V2 API</a>:</span>
+        <span class="lang-ja">このブリッジは<a href="https://poke.com/docs/developers/api">Poke V2 API</a>を使用しています：</span>
+      </p>
       <pre><code>POST https://poke.com/api/v1/inbound/api-message
 Authorization: Bearer YOUR_V2_KEY
 Content-Type: application/json
 
 {"message": "[poke-bridge] your instruction here", "source": "poke-bridge"}</code></pre>
-      <blockquote>⚠️ The legacy <code>/api/v1/inbound-sms/webhook</code> endpoint and <code>pk_</code>-prefixed V1 keys are not supported. Create a V2 key in <a href="https://poke.com/kitchen">Kitchen</a>.</blockquote>
+      <blockquote>
+        <span class="lang-en">⚠️ The legacy <code>/api/v1/inbound-sms/webhook</code> endpoint and <code>pk_</code>-prefixed V1 keys are not supported. Create a V2 key in <a href="https://poke.com/kitchen">Kitchen</a>.</span>
+        <span class="lang-ja">⚠️ レガシーの<code>/api/v1/inbound-sms/webhook</code>エンドポイントと<code>pk_</code>プレフィックスのV1キーはサポートされていません。<a href="https://poke.com/kitchen">Kitchen</a>でV2キーを作成してください。</span>
+      </blockquote>
     </section>
 
     <section>
-      <h2>Contributing</h2>
-      <p>PRs welcome. Ideas for new tools: <code>poke_search</code>, <code>poke_task</code>, <code>poke_note</code>. Follow the existing pattern in <code>poke-bridge.ts</code> and update this README.</p>
+      <h2>
+        <span class="lang-en">Contributing</span>
+        <span class="lang-ja">コントリビューション</span>
+      </h2>
+      <p>
+        <span class="lang-en">PRs welcome. Ideas for new tools: <code>poke_search</code>, <code>poke_task</code>, <code>poke_note</code>. Follow the existing pattern in <code>poke-bridge.ts</code> and update this README.</span>
+        <span class="lang-ja">PRを歓迎します。新しいツールのアイデア：<code>poke_search</code>、<code>poke_task</code>、<code>poke_note</code>。<code>poke-bridge.ts</code>の既存のパターンに従って、このREADMEも更新してください。</span>
+      </p>
     </section>
 
     <section>
-      <h2>License</h2>
+      <h2>
+        <span class="lang-en">License</span>
+        <span class="lang-ja">ライセンス</span>
+      </h2>
       <p>MIT</p>
     </section>
   </div>
+
+  <script>
+    function setLang(lang) {
+      document.body.setAttribute('data-lang', lang);
+      document.documentElement.lang = lang;
+      document.querySelectorAll('.lang-btn').forEach(function(btn) {
+        btn.classList.toggle('active', btn.textContent.trim() === lang.toUpperCase());
+      });
+    }
+
+    // Default to device language
+    if (navigator.language.startsWith('ja')) {
+      setLang('ja');
+    }
+  </script>
 </body>
 </html>
