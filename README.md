@@ -6,7 +6,7 @@ Send instructions to Poke by voice, from Claude, from your terminal, or anywhere
 
 ---
 
-## Quick Video DEmo
+## Quick Video Demo
 
 https://github.com/user-attachments/assets/b5496a0f-8a88-4f0e-9eea-3f1e7859881f
 
