@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>poke-bridge</title>
+  <meta property="og:title" content="Poke Bridge">
+  <meta property="og:description" content="Connect Poke to VoiceOS.">
+  <meta property="og:image" content="https://raw.githubusercontent.com/gabeperez/poke-bridge/main/og-image.png">
+  <style>
+    :root { color-scheme: dark; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0b0b0b;
+      color: #f3f3f3;
+      line-height: 1.6;
+    }
+    .wrap {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 40px 20px 72px;
+    }
+    header {
+      padding: 24px 0 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      margin-bottom: 28px;
+    }
+    h1, h2, h3 { line-height: 1.2; }
+    h1 { margin: 0 0 10px; font-size: clamp(2.4rem, 5vw, 4rem); }
+    h2 { margin-top: 2.2rem; font-size: 1.6rem; }
+    h3 { margin-top: 1.4rem; font-size: 1.1rem; }
+    p, li, td, th { font-size: 1rem; }
+    a { color: #9bdcff; }
+    hr { border: 0; border-top: 1px solid rgba(255,255,255,0.12); margin: 28px 0; }
+    code, pre {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      background: rgba(255,255,255,0.06);
+    }
+    code { padding: 0.15rem 0.35rem; border-radius: 6px; }
+    pre {
+      overflow: auto;
+      padding: 16px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    table { width: 100%; border-collapse: collapse; overflow: hidden; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.08); vertical-align: top; }
+    blockquote { margin: 16px 0; padding: 12px 16px; border-left: 3px solid #9bdcff; background: rgba(155,220,255,0.06); }
+    .muted { color: rgba(243,243,243,0.72); }
+    .pill { display: inline-block; padding: 3px 10px; border: 1px solid rgba(255,255,255,0.18); border-radius: 999px; margin-right: 8px; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="pill">MCP server</div>
+      <div class="pill">Poke</div>
+      <div class="pill">VoiceOS</div>
+      <h1>poke-bridge</h1>
+      <p class="muted">An MCP server that connects AI assistants to <a href="https://poke.com">Poke</a> — your iMessage-based AI agent.</p>
+      <p>Send instructions to Poke by voice, from Claude, from your terminal, or anywhere that supports MCP.</p>
+    </header>
+
+    <section>
+      <h2>What Is Poke?</h2>
+      <p><a href="https://poke.com">Poke</a> is an AI assistant you interact with over iMessage. It can send emails, manage your calendar, set reminders, and more — all through a simple text conversation. <code>poke-bridge</code> lets you trigger Poke programmatically from any MCP-compatible client or script.</p>
+    </section>
+
+    <section>
+      <h2>How It Works</h2>
+      <pre>Your client (VoiceOS / Claude / terminal / cron)
+         ↓
+   poke-bridge (MCP server)
+         ↓
+   Poke API (POST /inbound/api-message)
+         ↓
+   Poke acts on your instruction
+         ↓
+   Reply arrives in iMessage</pre>
+    </section>
+
+    <section>
+      <h2>Tools Exposed</h2>
+      <table>
+        <thead><tr><th>Tool</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td><code>send_to_poke</code></td><td>General-purpose — send any message or instruction</td></tr>
+          <tr><td><code>poke_reminder</code></td><td>Set a reminder with a task + time</td></tr>
+          <tr><td><code>poke_draft_email</code></td><td>Ask Poke to draft or send an email</td></tr>
+          <tr><td><code>poke_schedule</code></td><td>Add a calendar event via Poke</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Configuration</h2>
+      <table>
+        <thead><tr><th>Variable</th><th>Required</th><th>Default</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>POKE_API_KEY</code></td><td>Yes</td><td>—</td><td>Your Poke V2 API key from <a href="https://poke.com/kitchen">Kitchen</a></td></tr>
+          <tr><td><code>POKE_SOURCE</code></td><td>No</td><td><code>poke-bridge</code></td><td>Label prefixed to messages so Poke knows where they came from (e.g. <code>VoiceOS</code>, <code>Claude Desktop</code>, <code>Cursor</code>)</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Requirements</h2>
+      <ul>
+        <li><a href="https://poke.com">Poke</a> account with a <strong>V2 API key</strong> from <a href="https://poke.com/kitchen">Kitchen</a> → API Keys</li>
+        <li>Node.js 18+</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Setup</h2>
+      <h3>1. Clone and install</h3>
+      <pre><code>git clone https://github.com/gabeperez/poke-bridge.git
+cd poke-bridge
+npm install</code></pre>
+
+      <h3>2. Configure your API key</h3>
+      <pre><code>cp start.sh.example start.sh
+chmod +x start.sh</code></pre>
+      <p>Edit <code>start.sh</code> and replace <code>your_v2_key_here</code> with your Poke V2 API key:</p>
+      <pre><code>export POKE_API_KEY="your_v2_key_here"
+export POKE_SOURCE="VoiceOS"  # optional — defaults to "poke-bridge"</code></pre>
+      <blockquote>⚠️ <code>start.sh</code> is gitignored. Your key will never be committed.</blockquote>
+    </section>
+
+    <section>
+      <h2>Usage</h2>
+      <h3>With VoiceOS (voice commands on macOS)</h3>
+      <p><a href="https://voiceos.com">VoiceOS</a> is a macOS app that lets you control your computer by voice. Add poke-bridge as a custom integration:</p>
+      <p><strong>Settings → Integrations → Custom Integrations → Add</strong></p>
+      <table>
+        <thead><tr><th>Field</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Name</td><td>🌴 Poke</td></tr>
+          <tr><td>Launch command</td><td><code>/absolute/path/to/poke-bridge/start.sh</code></td></tr>
+        </tbody>
+      </table>
+      <p>Then speak naturally:</p>
+      <ul>
+        <li><em>“Ask Poke to remind me to call the client tomorrow at 9am”</em></li>
+        <li><em>“Tell Poke to draft an email to the team about Friday's deadline”</em></li>
+        <li><em>“Have Poke add a standup to my calendar Monday at 10am”</em></li>
+        <li><em>“Ask Poke what's on my calendar today”</em></li>
+      </ul>
+      <p><strong>Note:</strong> VoiceOS throws <code>ENAMETOOLONG</code> if you pass inline env vars (<code>KEY=value command</code>). The <code>start.sh</code> wrapper exports your key cleanly before launching the server.</p>
+
+      <h3>With Claude Desktop</h3>
+      <p>Add to <code>~/Library/Application Support/Claude/claude_desktop_config.json</code>:</p>
+      <pre><code>{
+  &quot;mcpServers&quot;: {
+    &quot;poke&quot;: {
+      &quot;command&quot;: &quot;/absolute/path/to/poke-bridge/node_modules/.bin/tsx&quot;,
+      &quot;args&quot;: [&quot;/absolute/path/to/poke-bridge/poke-bridge.ts&quot;],
+      &quot;env&quot;: {
+        &quot;POKE_API_KEY&quot;: &quot;your_v2_key_here&quot;,
+        &quot;POKE_SOURCE&quot;: &quot;Claude Desktop&quot;
+      }
+    }
+  }
+}</code></pre>
+      <p>Restart Claude Desktop after saving. Then in any conversation:</p>
+      <ul>
+        <li><em>“Tell Poke to remind me about the investor call at 3pm”</em></li>
+        <li><em>“Ask Poke to draft a follow-up email to the NSN team”</em></li>
+      </ul>
+
+      <h3>With Cursor / Windsurf</h3>
+      <p>Add the same block to your editor's MCP config (usually <code>.cursor/mcp.json</code> or equivalent):</p>
+      <pre><code>{
+  &quot;mcpServers&quot;: {
+    &quot;poke&quot;: {
+      &quot;command&quot;: &quot;/absolute/path/to/poke-bridge/node_modules/.bin/tsx&quot;,
+      &quot;args&quot;: [&quot;/absolute/path/to/poke-bridge/poke-bridge.ts&quot;],
+      &quot;env&quot;: {
+        &quot;POKE_API_KEY&quot;: &quot;your_v2_key_here&quot;,
+        &quot;POKE_SOURCE&quot;: &quot;Cursor&quot;
+      }
+    }
+  }
+}</code></pre>
+
+      <h3>From the terminal (no MCP needed)</h3>
+      <p>The Poke API is a single POST call:</p>
+      <pre><code>curl -X POST https://poke.com/api/v1/inbound/api-message \
+  -H &quot;Authorization: Bearer YOUR_KEY&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{&quot;message&quot;: &quot;will it rain today?&quot;}'</code></pre>
+      <p>Expected response:</p>
+      <pre><code>{&quot;success&quot;: true, &quot;message&quot;: &quot;Message sent successfully&quot;}</code></pre>
+
+      <h3>From a cron job or script</h3>
+      <pre><code>#!/bin/bash
+export POKE_API_KEY=&quot;your_v2_key_here&quot;
+
+curl -s -X POST https://poke.com/api/v1/inbound/api-message \
+  -H &quot;Authorization: Bearer $POKE_API_KEY&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{&quot;message&quot;: &quot;The build finished. Please add a note to my todo list.&quot;}'</code></pre>
+      <p>Or trigger from any script after a long job:</p>
+      <pre><code>run_my_long_job.sh &amp;&amp; \
+  curl -s -X POST https://poke.com/api/v1/inbound/api-message \
+    -H &quot;Authorization: Bearer $POKE_API_KEY&quot; \
+    -H &quot;Content-Type: application/json&quot; \
+    -d '{&quot;message&quot;: &quot;Job done. Send me a summary of what ran today.&quot;}'</code></pre>
+
+      <h3>From macOS Shortcuts</h3>
+      <p>Use a <strong>Get Contents of URL</strong> action:</p>
+      <ul>
+        <li><strong>URL:</strong> <code>https://poke.com/api/v1/inbound/api-message</code></li>
+        <li><strong>Method:</strong> POST</li>
+        <li><strong>Headers:</strong> <code>Authorization: Bearer YOUR_KEY</code>, <code>Content-Type: application/json</code></li>
+        <li><strong>Request Body:</strong> JSON — <code>{&quot;message&quot;: &quot;your instruction here&quot;, &quot;source&quot;: &quot;Shortcuts&quot;}</code></li>
+      </ul>
+      <p>Pair it with a Siri phrase for fully voice-triggered Poke on iPhone or Apple Watch.</p>
+    </section>
+
+    <section>
+      <h2>How Messages Appear</h2>
+      <p>Poke receives messages via API as a webhook — they don't show on your side of the iMessage thread, but Poke acts on them and replies normally in iMessage. Every message sent through this bridge is prefixed with <code>[poke-bridge]</code> (or your custom <code>POKE_SOURCE</code>) so Poke has context about where it came from.</p>
+    </section>
+
+    <section>
+      <h2>Project Structure</h2>
+      <pre><code>poke-bridge/
+├── poke-bridge.ts     # MCP server (TypeScript)
+├── start.sh           # Launch wrapper with API key (gitignored)
+├── start.sh.example   # Template — copy to start.sh and add your key
+├── package.json
+├── tsconfig.json
+├── .gitignore
+└── README.md</code></pre>
+    </section>
+
+    <section>
+      <h2>API Reference</h2>
+      <p>This bridge uses the <a href="https://poke.com/docs/developers/api">Poke V2 API</a>:</p>
+      <pre><code>POST https://poke.com/api/v1/inbound/api-message
+Authorization: Bearer YOUR_V2_KEY
+Content-Type: application/json
+
+{"message": "[poke-bridge] your instruction here", "source": "poke-bridge"}</code></pre>
+      <blockquote>⚠️ The legacy <code>/api/v1/inbound-sms/webhook</code> endpoint and <code>pk_</code>-prefixed V1 keys are not supported. Create a V2 key in <a href="https://poke.com/kitchen">Kitchen</a>.</blockquote>
+    </section>
+
+    <section>
+      <h2>Contributing</h2>
+      <p>PRs welcome. Ideas for new tools: <code>poke_search</code>, <code>poke_task</code>, <code>poke_note</code>. Follow the existing pattern in <code>poke-bridge.ts</code> and update this README.</p>
+    </section>
+
+    <section>
+      <h2>License</h2>
+      <p>MIT</p>
+    </section>
+  </div>
+</body>
+</html>
