@@ -1,0 +1,9 @@
+@echo off
+REM Copy this file to start.bat and fill in your Poke V2 API key.
+REM Get your key at https://poke.com/kitchen -> API Keys
+REM
+REM start.bat is gitignored -- your key will never be committed.
+
+set POKE_API_KEY=your_v2_key_here
+
+"%~dp0node_modules\.bin\tsx.cmd" "%~dp0poke-bridge.ts"

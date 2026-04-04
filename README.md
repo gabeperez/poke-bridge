@@ -58,33 +58,36 @@ npm install
 
 ### 2. Configure your API key
 
+**macOS / Linux:**
 ```bash
 cp start.sh.example start.sh
 chmod +x start.sh
 ```
+Open `start.sh` and replace `your_v2_key_here` with your Poke V2 API key.
 
-Edit `start.sh` and replace `your_v2_key_here` with your Poke V2 API key:
-
-```bash
-export POKE_API_KEY="your_v2_key_here"
+**Windows:**
+```cmd
+copy start.bat.example start.bat
 ```
+Open `start.bat` and replace `your_v2_key_here` with your Poke V2 API key.
 
-> ⚠️ `start.sh` is gitignored. Your key will never be committed.
+> ⚠️ `start.sh` and `start.bat` are gitignored. Your key will never be committed.
 
 ---
 
 ## Usage
 
-### With VoiceOS (voice commands on macOS)
+### With VoiceOS
 
-[VoiceOS](https://voiceos.com) is a macOS app that lets you control your computer by voice. Add poke-bridge as a custom integration:
+[VoiceOS](https://voiceos.com) is a voice productivity app that lets you control your computer by speaking. Add poke-bridge as a custom integration:
 
 **Settings → Integrations → Custom Integrations → Add**
 
 | Field | Value |
 |---|---|
 | Name | 🌴 Poke |
-| Launch command | `/absolute/path/to/poke-bridge/start.sh` |
+| Launch command (macOS) | `/absolute/path/to/poke-bridge/start.sh` |
+| Launch command (Windows) | `C:\absolute\path\to\poke-bridge\start.bat` |
 
 Then speak naturally:
 
@@ -93,13 +96,16 @@ Then speak naturally:
 - *"Have Poke add a standup to my calendar Monday at 10am"*
 - *"Ask Poke what's on my calendar today"*
 
-> **Note:** VoiceOS throws `ENAMETOOLONG` if you pass inline env vars (`KEY=value command`). The `start.sh` wrapper exports your key cleanly before launching the server.
+> **Why a wrapper script?** VoiceOS throws `ENAMETOOLONG` if you pass inline env vars (`KEY=value command`). The wrapper script exports your key cleanly before launching the server. On Windows, `.sh` files won't work — use `start.bat` instead.
 
 ---
 
 ### With Claude Desktop
 
-Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
+Add to your Claude Desktop config:
+
+- **macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
 
 ```json
 {
@@ -115,37 +121,34 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
 }
 ```
 
-Restart Claude Desktop after saving. Then in any conversation:
+**Windows** — use `tsx.cmd` and backslashes:
+```json
+{
+  "mcpServers": {
+    "poke": {
+      "command": "C:\\path\\to\\poke-bridge\\node_modules\\.bin\\tsx.cmd",
+      "args": ["C:\\path\\to\\poke-bridge\\poke-bridge.ts"],
+      "env": {
+        "POKE_API_KEY": "your_v2_key_here"
+      }
+    }
+  }
+}
+```
 
-- *"Tell Poke to remind me about the investor call at 3pm"*
-- *"Ask Poke to draft a follow-up email to the NSN team"*
+Restart Claude Desktop after saving.
 
 ---
 
 ### With Cursor / Windsurf
 
-Add the same block to your editor's MCP config (usually `.cursor/mcp.json` or equivalent):
-
-```json
-{
-  "mcpServers": {
-    "poke": {
-      "command": "/absolute/path/to/poke-bridge/node_modules/.bin/tsx",
-      "args": ["/absolute/path/to/poke-bridge/poke-bridge.ts"],
-      "env": {
-        "POKE_API_KEY": "your_v2_key_here"
-      }
-    }
-  }
-}
-```
+Same config as Claude Desktop above. Add to your editor's MCP settings file and restart.
 
 ---
 
 ### From the terminal (no MCP needed)
 
-The Poke API is a single POST call:
-
+**macOS / Linux:**
 ```bash
 curl -X POST https://poke.com/api/v1/inbound/api-message \
   -H "Authorization: Bearer YOUR_KEY" \
@@ -153,8 +156,12 @@ curl -X POST https://poke.com/api/v1/inbound/api-message \
   -d '{"message": "will it rain today?"}'
 ```
 
-Expected response:
+**Windows CMD** — use escaped double quotes, no single quotes:
+```cmd
+curl -X POST https://poke.com/api/v1/inbound/api-message -H "Authorization: Bearer YOUR_KEY" -H "Content-Type: application/json" -d "{\"message\": \"will it rain today?\"}"
+```
 
+Expected response:
 ```json
 {"success": true, "message": "Message sent successfully"}
 ```
@@ -170,17 +177,7 @@ export POKE_API_KEY="your_v2_key_here"
 curl -s -X POST https://poke.com/api/v1/inbound/api-message \
   -H "Authorization: Bearer $POKE_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{"message": "The build finished. Please add a note to my todo list."}'
-```
-
-Or trigger from any script after a long job:
-
-```bash
-run_my_long_job.sh && \
-  curl -s -X POST https://poke.com/api/v1/inbound/api-message \
-    -H "Authorization: Bearer $POKE_API_KEY" \
-    -H "Content-Type: application/json" \
-    -d '{"message": "Job done. Send me a summary of what ran today."}'
+  -d '{"message": "The build finished. Add a note to my todo list."}'
 ```
 
 ---
@@ -208,9 +205,11 @@ Poke receives messages via API as a webhook — they don't show on your side of 
 
 ```
 poke-bridge/
-├── poke-bridge.ts     # MCP server (TypeScript)
-├── start.sh           # Launch wrapper with API key (gitignored)
-├── start.sh.example   # Template — copy to start.sh and add your key
+├── poke-bridge.ts      # MCP server (TypeScript)
+├── start.sh            # macOS/Linux launch wrapper (gitignored)
+├── start.sh.example    # macOS/Linux template
+├── start.bat           # Windows launch wrapper (gitignored)
+├── start.bat.example   # Windows template
 ├── package.json
 ├── tsconfig.json
 ├── .gitignore

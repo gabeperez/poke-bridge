@@ -6,6 +6,7 @@ dist/
 
 # Local secrets — NEVER commit your API key
 start.sh
+start.bat
 
 # macOS
 .DS_Store
